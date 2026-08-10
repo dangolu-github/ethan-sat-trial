@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ethan HM 1 | Sentence Boundaries | 30 Questions</title>
+<style>
+:root{--ink:#17233b;--muted:#5d687b;--blue:#2157b6;--blue2:#173f88;--pale:#eef4ff;--line:#d5deed;--paper:#fff;--green:#e8f6ed;--gold:#fff6df;--shadow:0 18px 50px rgba(35,54,91,.13)}
+*{box-sizing:border-box}body{margin:0;background:#e9edf4;color:var(--ink);font:16px/1.62 Aptos,"Hiragino Sans GB","PingFang SC",Arial,sans-serif}
+.page{width:min(1000px,calc(100% - 32px));margin:28px auto;padding:48px 58px 64px;background:var(--paper);border-radius:18px;box-shadow:var(--shadow)}
+.toolbar{display:flex;justify-content:flex-end;gap:8px;margin:-28px 0 24px}
+.btn{border:1px solid var(--blue);border-radius:999px;background:#fff;color:var(--blue2);padding:9px 14px;font-weight:800;cursor:pointer}
+.btn.primary{background:var(--blue2);color:#fff}
+.btn:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid #9eb9ef;outline-offset:3px}
+.eyebrow{margin:0;color:var(--blue);font-size:.78rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+h1{margin:.35rem 0 .7rem;color:#102751;font-size:clamp(1.9rem,4.6vw,2.9rem);line-height:1.06;letter-spacing:-.035em}
+.subtitle{margin:0;color:var(--muted);font-size:1.06rem}
+.overview{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:1.5rem 0}
+.stat{padding:13px 14px;border:1px solid var(--line);border-radius:12px;background:#f7f9fd}
+.stat strong{display:block;color:var(--blue2);font-size:1.15rem}.stat span{color:var(--muted);font-size:.83rem}
+.directions{padding:15px 17px;border-left:5px solid var(--blue);border-radius:10px;background:var(--pale)}
+.directions ol{margin:.6rem 0 0;padding-left:1.25rem}.directions li{margin:.3rem 0}
+.section{margin-top:2.8rem;padding-top:1.15rem;border-top:3px solid var(--blue)}
+.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.section h2{margin:0;color:var(--blue2);font-size:1.5rem}
+.section .zh{margin:.3rem 0 0;color:var(--muted);font-size:.95rem}
+.tag{display:inline-block;border-radius:999px;padding:4px 10px;background:#dce8ff;color:#173f88;font-size:.75rem;font-weight:900;white-space:nowrap}
+.reminder{margin:.85rem 0 1.1rem;border:1px solid #c7d8f6;border-radius:11px;background:#f7faff;overflow:hidden}
+.reminder summary{padding:11px 14px;color:var(--blue2);font-weight:850;cursor:pointer}
+.reminder summary::marker{color:var(--blue)}
+.reminder .body{padding:0 14px 13px}.reminder p{margin:.5rem 0 0}
+.pattern{display:inline-block;font:800 .88rem/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:#193f7b;background:#e7effc;border-radius:6px;padding:2px 8px}
+.question{margin:1rem 0 1.25rem;padding:17px 18px 16px;border:1px solid var(--line);border-radius:14px;background:#fff;break-inside:avoid}
+.qhead{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.qnum{margin:0;color:var(--blue2);font-size:1.08rem}
+.difficulty{border-radius:999px;padding:3px 9px;background:var(--green);color:#27643b;font-size:.73rem;font-weight:900}
+.difficulty.m{background:var(--gold);color:#7a5410}.difficulty.d{background:#fdeaea;color:#8f2f2f}
+.stem{margin:.85rem 0;padding:13px 14px;border-left:4px solid #89a9e3;border-radius:0 9px 9px 0;background:#f7f9fc}
+.blank{display:inline-block;min-width:56px;border-bottom:2px solid var(--blue);color:transparent}
+.ask{font-weight:800}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.option{display:flex;gap:9px;align-items:flex-start;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:#fff;cursor:pointer}
+.option:hover{background:#f4f8ff}.option input{margin-top:.33rem;accent-color:var(--blue)}
+.letter{font-weight:900;color:var(--blue2)}
+.rule-line{margin-top:12px;color:var(--muted);font-size:.88rem}
+.write-line{display:inline-block;width:min(68%,470px);border-bottom:1px solid #9ba8bc;height:1.1rem;vertical-align:bottom}
+.checklist{margin-top:2.7rem;padding:17px 19px;border:1px solid #b9ddc5;border-radius:14px;background:var(--green)}
+.checklist h2{margin:.05rem 0 .5rem;color:#245d38;font-size:1.25rem}
+.checklist ul{margin:.4rem 0 0;padding-left:1.2rem}.checklist li{margin:.25rem 0}
+.footer{margin-top:2.8rem;padding-top:1rem;border-top:1px solid var(--line);color:var(--muted);font-size:.82rem}
+/* teacher-only */
+.tmap{margin:1.6rem 0;border:1px solid var(--line);border-radius:12px;overflow:auto}
+table{border-collapse:collapse;width:100%;font-size:.86rem;min-width:760px}
+th,td{border-bottom:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:#f2f6fd;color:var(--blue2);font-weight:900;white-space:nowrap}
+.ansbox{margin:.9rem 0 .3rem;padding:11px 13px;border-left:4px solid #2f8f56;border-radius:0 9px 9px 0;background:#eefaf1}
+.ansbox strong{color:#245d38}
+.why{margin:.55rem 0 .3rem}
+.diag{margin:.6rem 0 0;padding-left:0;list-style:none}
+.diag li{margin:.3rem 0;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:#fbfcfe}
+.diag li.ok{background:#eefaf1;border-color:#b9ddc5}
+.diag b{color:var(--blue2)}
+.prov{margin-top:10px;color:var(--muted);font-size:.8rem;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.warn{margin:1.2rem 0;padding:14px 16px;border-left:5px solid #c58a12;border-radius:0 10px 10px 0;background:var(--gold)}
+@media(max-width:720px){.page{width:100%;margin:0;padding:30px 18px 44px;border-radius:0;box-shadow:none}.toolbar{margin:-14px 0 20px;justify-content:flex-start;flex-wrap:wrap}.overview{grid-template-columns:1fr 1fr}.options{grid-template-columns:1fr}.section-head{display:block}.section-head .tag{margin-top:8px}.write-line{width:65%}body{overflow-x:hidden}.page{max-width:100%;overflow:hidden}.page>*{min-width:0}.directions,.question,.section,.overview,.stem{max-width:100%;min-width:0}.directions li,.stem,.subtitle{overflow-wrap:anywhere}}
+@media print{@page{size:Letter;margin:.48in}body{background:#fff;font-size:10.5pt}.page{width:auto;margin:0;padding:0;border-radius:0;box-shadow:none}.toolbar{display:none}.question{break-inside:avoid}.reminder[open] .body{display:block}}
+</style>
+<main class="page">
+<div class="toolbar"><button class="btn" type="button" data-clear>Clear choices</button><button class="btn primary" type="button" data-print>Save as PDF</button></div>
+<header>
+<p class="eyebrow">SAT Reading and Writing | Ethan HM 1</p>
+<h1>Sentence Boundaries: 30-Question Mixed Practice</h1>
+<p class="subtitle">All six Sentence Boundaries subtypes are included. Work from sentence structure, not sound.</p>
+</header>
+<div class="overview">
+<div class="stat"><strong>30</strong><span>questions</span></div>
+<div class="stat"><strong>6</strong><span>subtypes covered</span></div>
+<div class="stat"><strong>10 / 11 / 9</strong><span>Easy / Moderate / Difficult</span></div>
+<div class="stat"><strong>Clause-Skeleton</strong><span>one method for all questions</span></div>
+</div>
+<section class="directions"><strong>How to work</strong>
+<ol>
+<li><b>Cover the choices first.</b> Mark the subject and finite verb on each side of the blank.</li>
+<li><b>Classify the structure:</b> Is each side an IC, DC, phrase, or list? Do not decide from a pause.</li>
+<li><b>State the rule:</b> Name the punctuation allowed by that structure, then return to the choices.</li>
+<li><b>Write one rule sentence.</b> For example: "IC + IC needs a period, semicolon, or comma + FANBOYS." Do not write "it sounds right."</li>
+<li>Finish and mark uncertain questions. <b>Do not check answers.</b> We will review them after submission.</li>
+</ol></section>
+<section class="section" id="icj">
+<div class="section-head"><div><h2>Subtype 1: Independent-Clause Join</h2><p class="zh">Legal joins between two complete clauses</p></div><span class="tag">Q1–Q9|9 questions</span></div>
+<details class="reminder"><summary>Method reminder</summary><div class="body">
+<p><span class="pattern">IC. IC | IC; IC | IC, FANBOYS IC</span></p>
+<p>When both sides are complete clauses, use a period, a semicolon, or a comma + FANBOYS. A comma alone creates a comma splice; no boundary creates a run-on.</p>
+</div></details>
+<article class="question" data-q="1">
+<div class="qhead"><h3 class="qnum">1</h3><span class="difficulty ">Easy</span></div>
+<p class="stem">Psychophysicist Howard Moskowitz was hired by a soda company to determine how much artificial sweetener <span class="blank">_____</span> After conducting consumer taste tests, he found that no such ideal existed: participants expressed a wide range of preferences for different blends of sweetener, carbonization, and flavoring.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q1"><span class="letter">A.</span><span>do most people prefer in a diet drink?</span></label>
+<label class="option"><input type="radio" name="q1"><span class="letter">B.</span><span>do most people prefer in a diet drink.</span></label>
+<label class="option"><input type="radio" name="q1"><span class="letter">C.</span><span>most people prefer in a diet drink?</span></label>
+<label class="option"><input type="radio" name="q1"><span class="letter">D.</span><span>most people prefer in a diet drink.</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+<article class="question" data-q="2">
+<div class="qhead"><h3 class="qnum">2</h3><span class="difficulty m">Moderate</span></div>
+<p class="stem">Detroit natives Timothy Paule and Nicole Lindsey have combined their two passions, Detroit and beekeeping, to improve the health of their city's flowers and other vegetation. In 2017, the couple converted a vacant lot in the city into an <span class="blank">_____</span> in the years that followed they acquired nine additional lots and established more than 35 hives.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q2"><span class="letter">A.</span><span>apiary,</span></label>
+<label class="option"><input type="radio" name="q2"><span class="letter">B.</span><span>apiary, and</span></label>
+<label class="option"><input type="radio" name="q2"><span class="letter">C.</span><span>apiary and</span></label>
+<label class="option"><input type="radio" name="q2"><span class="letter">D.</span><span>apiary</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+<article class="question" data-q="3">
+<div class="qhead"><h3 class="qnum">3</h3><span class="difficulty m">Moderate</span></div>
+<p class="stem">Nine months before Rosa Parks made history by refusing to comply with the segregated seating policy on a Montgomery, Alabama, bus, a fifteen-year-old Montgomery girl named Claudette Colvin was arrested for the same <span class="blank">_____</span> to some historians, Colvin's arrest led to Parks's action and eventually to the desegregation of Montgomery's bus system.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q3"><span class="letter">A.</span><span>offense. According</span></label>
+<label class="option"><input type="radio" name="q3"><span class="letter">B.</span><span>offense, according</span></label>
+<label class="option"><input type="radio" name="q3"><span class="letter">C.</span><span>offense according</span></label>
+<label class="option"><input type="radio" name="q3"><span class="letter">D.</span><span>offense and according</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+<article class="question" data-q="4">
+<div class="qhead"><h3 class="qnum">4</h3><span class="difficulty m">Moderate</span></div>
+<p class="stem">Humans were long thought to have begun occupying the Peruvian settlement of Machu Picchu between 1440 and 1450 CE. However, a team led by anthropologist Dr. Richard Burger used accelerator mass spectrometry to uncover evidence that it was occupied <span class="blank">_____</span> 1420 CE, according to Burger, humans were likely inhabiting the area.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q4"><span class="letter">A.</span><span>earlier. In</span></label>
+<label class="option"><input type="radio" name="q4"><span class="letter">B.</span><span>earlier, in</span></label>
+<label class="option"><input type="radio" name="q4"><span class="letter">C.</span><span>earlier, which in</span></label>
+<label class="option"><input type="radio" name="q4"><span class="letter">D.</span><span>earlier in</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+<article class="question" data-q="5">
+<div class="qhead"><h3 class="qnum">5</h3><span class="difficulty m">Moderate</span></div>
+<p class="stem">In 1727, dramatist Lewis Theobald presented a new play, Double Falsehood, at a London theater. Theobald claimed that his drama was based on a little-known play by William Shakespeare, Cardenio. Many, including poet Alexander Pope, were <span class="blank">_____</span> historians have determined that Shakespeare's company did perform a play called Cardenio in 1613.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q5"><span class="letter">A.</span><span>skeptical but</span></label>
+<label class="option"><input type="radio" name="q5"><span class="letter">B.</span><span>skeptical, but</span></label>
+<label class="option"><input type="radio" name="q5"><span class="letter">C.</span><span>skeptical,</span></label>
+<label class="option"><input type="radio" name="q5"><span class="letter">D.</span><span>skeptical</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+<article class="question" data-q="6">
+<div class="qhead"><h3 class="qnum">6</h3><span class="difficulty d">Difficult</span></div>
+<p class="stem">Researcher Lin Zhi developed a process for increasing the tensile strength—measured in gigapascals, or GPa—of silkworm <span class="blank">_____</span> dissolving and reweaving the silk in a solution of iron metal ions, zinc, and sugar, Zhi increased the amount of force required to stretch it from approximately 0.5 GPa to 2 GPa.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q6"><span class="letter">A.</span><span>silk, by</span></label>
+<label class="option"><input type="radio" name="q6"><span class="letter">B.</span><span>silk by</span></label>
+<label class="option"><input type="radio" name="q6"><span class="letter">C.</span><span>silk and by</span></label>
+<label class="option"><input type="radio" name="q6"><span class="letter">D.</span><span>silk. By</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+<article class="question" data-q="7">
+<div class="qhead"><h3 class="qnum">7</h3><span class="difficulty d">Difficult</span></div>
+<p class="stem">In discussing Mary Shelley's 1818 epistolary novel Frankenstein, literary theorist Gayatri Spivak directs the reader's attention to the character of Margaret Saville. As Spivak points out, Saville is not the protagonist of Shelley's <span class="blank">_____</span> as the recipient of the letters that frame the book's narrative, she's the "occasion" of it.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q7"><span class="letter">A.</span><span>novel</span></label>
+<label class="option"><input type="radio" name="q7"><span class="letter">B.</span><span>novel,</span></label>
+<label class="option"><input type="radio" name="q7"><span class="letter">C.</span><span>novel; rather,</span></label>
+<label class="option"><input type="radio" name="q7"><span class="letter">D.</span><span>novel, rather,</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+<article class="question" data-q="8">
+<div class="qhead"><h3 class="qnum">8</h3><span class="difficulty d">Difficult</span></div>
+<p class="stem">Using satellite remote sensing, Dr. Catherine Nakalembe, director of NASA's Harvest Africa initiative, gathers important data on crop health. Nakalembe doesn't just compile the <span class="blank">_____</span> she also shares her findings with African farmers, enabling them to make data-driven decisions about managing critical food crops.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q8"><span class="letter">A.</span><span>information, though;</span></label>
+<label class="option"><input type="radio" name="q8"><span class="letter">B.</span><span>information, though,</span></label>
+<label class="option"><input type="radio" name="q8"><span class="letter">C.</span><span>information; though</span></label>
+<label class="option"><input type="radio" name="q8"><span class="letter">D.</span><span>information though,</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+<article class="question" data-q="9">
+<div class="qhead"><h3 class="qnum">9</h3><span class="difficulty d">Difficult</span></div>
+<p class="stem">In paleontology, the term "Elvis taxon" gets applied to a newly identified living species that was once presumed to be extinct. Like an Elvis impersonator who might bear a striking resemblance to the late musical icon Elvis Presley himself, an Elvis taxon is not the real thing, <span class="blank">_____</span> is a misidentified look-alike.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q9"><span class="letter">A.</span><span>however but it</span></label>
+<label class="option"><input type="radio" name="q9"><span class="letter">B.</span><span>however it</span></label>
+<label class="option"><input type="radio" name="q9"><span class="letter">C.</span><span>however, it</span></label>
+<label class="option"><input type="radio" name="q9"><span class="letter">D.</span><span>however. It</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+</section>
+<section class="section" id="dca">
+<div class="section-head"><div><h2>Subtype 2: Dependent-Clause Attachment</h2><p class="zh">Attach a dependent clause to an independent clause</p></div><span class="tag">Q10–Q12|3 questions</span></div>
+<details class="reminder"><summary>Method reminder</summary><div class="body">
+<p><span class="pattern">DC, IC | IC + essential final DC (no comma)</span></p>
+<p>A DC has a subject and finite verb but cannot stand alone because of a subordinator such as because, although, or while. Use a comma after an initial DC; use no comma before an essential final DC. A DC cannot stand before a period or semicolon as if it were complete.</p>
+</div></details>
+<article class="question" data-q="10">
+<div class="qhead"><h3 class="qnum">10</h3><span class="difficulty ">Easy</span></div>
+<p class="stem">The Andean condor is among the heaviest birds capable of sustained flight. Because a mature adult can weigh as much as fifteen <span class="blank">_____</span> it relies on rising columns of warm air to stay aloft rather than on continuous flapping.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q10"><span class="letter">A.</span><span>kilograms</span></label>
+<label class="option"><input type="radio" name="q10"><span class="letter">B.</span><span>kilograms;</span></label>
+<label class="option"><input type="radio" name="q10"><span class="letter">C.</span><span>kilograms,</span></label>
+<label class="option"><input type="radio" name="q10"><span class="letter">D.</span><span>kilograms.</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+<article class="question" data-q="11">
+<div class="qhead"><h3 class="qnum">11</h3><span class="difficulty ">Easy</span></div>
+<p class="stem">Marine biologist Dr. Ayana Elizabeth Johnson argues that coastal communities should be consulted early in the planning <span class="blank">_____</span> because their knowledge of local currents and fish populations often exceeds what survey data alone can capture.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q11"><span class="letter">A.</span><span>process</span></label>
+<label class="option"><input type="radio" name="q11"><span class="letter">B.</span><span>process,</span></label>
+<label class="option"><input type="radio" name="q11"><span class="letter">C.</span><span>process;</span></label>
+<label class="option"><input type="radio" name="q11"><span class="letter">D.</span><span>process—</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+<article class="question" data-q="12">
+<div class="qhead"><h3 class="qnum">12</h3><span class="difficulty m">Moderate</span></div>
+<p class="stem">Although the Voynich manuscript, an illustrated codex written in an as-yet-unidentified script, has been studied by professional cryptographers for more than a <span class="blank">_____</span> no one has convincingly decoded a single line of it.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q12"><span class="letter">A.</span><span>century</span></label>
+<label class="option"><input type="radio" name="q12"><span class="letter">B.</span><span>century;</span></label>
+<label class="option"><input type="radio" name="q12"><span class="letter">C.</span><span>century,</span></label>
+<label class="option"><input type="radio" name="q12"><span class="letter">D.</span><span>century—</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+</section>
+<section class="section" id="ext">
+<div class="section-head"><div><h2>Subtype 3: Extra Information</h2><p class="zh">Extra information needs a matching pair</p></div><span class="tag">Q13–Q18|6 questions</span></div>
+<details class="reminder"><summary>Method reminder</summary><div class="body">
+<p><span class="pattern">…, extra, …　|　…— extra —…　|　…(extra)…</span></p>
+<p>Use the removal test. If the sentence and reference remain complete, the information is extra and needs a matching pair of commas, dashes, or parentheses. One-sided punctuation fails. Essential information takes no pair.</p>
+</div></details>
+<article class="question" data-q="13">
+<div class="qhead"><h3 class="qnum">13</h3><span class="difficulty ">Easy</span></div>
+<p class="stem">In 1959, the film industry debuted Smell-O-Vision. Theaters were fitted with specialized vents that emitted odors at specific points in a <span class="blank">_____</span> as the scent of roses when roses appeared in a scene. Smell-O-Vision failed to impress, however, with one reviewer declaring it "briefly weird and not very interesting."</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q13"><span class="letter">A.</span><span>movie such</span></label>
+<label class="option"><input type="radio" name="q13"><span class="letter">B.</span><span>movie; such</span></label>
+<label class="option"><input type="radio" name="q13"><span class="letter">C.</span><span>movie. Such</span></label>
+<label class="option"><input type="radio" name="q13"><span class="letter">D.</span><span>movie, such</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+<article class="question" data-q="14">
+<div class="qhead"><h3 class="qnum">14</h3><span class="difficulty m">Moderate</span></div>
+<p class="stem">Archaeologists have estimated that the pre-Columbian Native American city of Cahokia, located across the Mississippi River from modern-day St. Louis, Missouri, had as many as 20,000 inhabitants in the year 1150 <span class="blank">_____</span> it one of the largest cities in North America at the time.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q14"><span class="letter">A.</span><span>CE making</span></label>
+<label class="option"><input type="radio" name="q14"><span class="letter">B.</span><span>CE. Making</span></label>
+<label class="option"><input type="radio" name="q14"><span class="letter">C.</span><span>CE, making</span></label>
+<label class="option"><input type="radio" name="q14"><span class="letter">D.</span><span>CE; making</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+<article class="question" data-q="15">
+<div class="qhead"><h3 class="qnum">15</h3><span class="difficulty m">Moderate</span></div>
+<p class="stem">Luci Tapahonso is the inaugural poet laureate of the Navajo Nation. Her book Sáanii Dahataal/The Women Are Singing—a combination of fiction and memoir, poetry and <span class="blank">_____</span> serves as a testament to her versatility as a writer.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q15"><span class="letter">A.</span><span>prose;</span></label>
+<label class="option"><input type="radio" name="q15"><span class="letter">B.</span><span>prose</span></label>
+<label class="option"><input type="radio" name="q15"><span class="letter">C.</span><span>prose,</span></label>
+<label class="option"><input type="radio" name="q15"><span class="letter">D.</span><span>prose—</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+<article class="question" data-q="16">
+<div class="qhead"><h3 class="qnum">16</h3><span class="difficulty m">Moderate</span></div>
+<p class="stem">Swedish scientists Eva Engvall and Peter Perlmann developed a method for measuring the concentration of different proteins in a biological sample. Their <span class="blank">_____</span> ELISA (enzyme-linked immunosorbent assay), is used to detect and measure proteins that indicate the presence of certain diseases.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q16"><span class="letter">A.</span><span>method (called</span></label>
+<label class="option"><input type="radio" name="q16"><span class="letter">B.</span><span>method—called</span></label>
+<label class="option"><input type="radio" name="q16"><span class="letter">C.</span><span>method, called</span></label>
+<label class="option"><input type="radio" name="q16"><span class="letter">D.</span><span>method called</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+<article class="question" data-q="17">
+<div class="qhead"><h3 class="qnum">17</h3><span class="difficulty d">Difficult</span></div>
+<p class="stem">Quantum particles of light—photons—provide an unhackable means of transmitting encryption keys over networks, as attempts to observe particles in quantum states will invariably alter the particles <span class="blank">_____</span> dismantle any information they transmit.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q17"><span class="letter">A.</span><span>and in the process,</span></label>
+<label class="option"><input type="radio" name="q17"><span class="letter">B.</span><span>and, in the process,</span></label>
+<label class="option"><input type="radio" name="q17"><span class="letter">C.</span><span>and in the process—</span></label>
+<label class="option"><input type="radio" name="q17"><span class="letter">D.</span><span>and, in the process</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+<article class="question" data-q="18">
+<div class="qhead"><h3 class="qnum">18</h3><span class="difficulty d">Difficult</span></div>
+<p class="stem">With some 16,000 in attendance, the Second World Black and African Festival of Arts and <span class="blank">_____</span> or FESTAC '77, as the event was more commonly known—became the largest pan-African event on record. FESTAC drew people from around the world to Lagos, Nigeria, for a monthlong celebration of Black and African art, scholarship, and activism.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q18"><span class="letter">A.</span><span>Culture:</span></label>
+<label class="option"><input type="radio" name="q18"><span class="letter">B.</span><span>Culture—</span></label>
+<label class="option"><input type="radio" name="q18"><span class="letter">C.</span><span>Culture,</span></label>
+<label class="option"><input type="radio" name="q18"><span class="letter">D.</span><span>Culture</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+</section>
+<section class="section" id="cdc">
+<div class="section-head"><div><h2>Subtype 4: Colon or Dash Completion</h2><p class="zh">Colon or dash: complete lead-in + explanation</p></div><span class="tag">Q19–Q21|3 questions</span></div>
+<details class="reminder"><summary>Method reminder</summary><div class="body">
+<p><span class="pattern">IC: explanation | IC — explanation</span></p>
+<p>A colon or single dash requires a complete independent clause before it. Use the period test: the lead-in must be able to end with a period. The material after the boundary may explain, name, illustrate, or list.</p>
+</div></details>
+<article class="question" data-q="19">
+<div class="qhead"><h3 class="qnum">19</h3><span class="difficulty ">Easy</span></div>
+<p class="stem">In its final report, the engineering team highlighted one result as especially <span class="blank">_____</span> the lighter alloy's unexpectedly high resistance to pressure.</p><p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q19"><span class="letter">A.</span><span>important,</span></label>
+<label class="option"><input type="radio" name="q19"><span class="letter">B.</span><span>important:</span></label>
+<label class="option"><input type="radio" name="q19"><span class="letter">C.</span><span>important;</span></label>
+<label class="option"><input type="radio" name="q19"><span class="letter">D.</span><span>important</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+<article class="question" data-q="20">
+<div class="qhead"><h3 class="qnum">20</h3><span class="difficulty ">Easy</span></div>
+<p class="stem">The exhibition catalog devotes an entire chapter to Marie Tharp's working method. It lists the three materials she relied on <span class="blank">_____</span> sounding data from research vessels, hand-drawn contour sheets, and photographic plates of the seafloor.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q20"><span class="letter">A.</span><span>most:</span></label>
+<label class="option"><input type="radio" name="q20"><span class="letter">B.</span><span>most,</span></label>
+<label class="option"><input type="radio" name="q20"><span class="letter">C.</span><span>most</span></label>
+<label class="option"><input type="radio" name="q20"><span class="letter">D.</span><span>most;</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+<article class="question" data-q="21">
+<div class="qhead"><h3 class="qnum">21</h3><span class="difficulty m">Moderate</span></div>
+<p class="stem">Between 1957 and 1977, cartographer Marie Tharp and geologist Bruce Heezen published a series of maps that changed how scientists pictured the <span class="blank">_____</span> instead of a flat, featureless plain, the maps revealed ridges, trenches, and rift valleys running for thousands of kilometers.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q21"><span class="letter">A.</span><span>seabed,</span></label>
+<label class="option"><input type="radio" name="q21"><span class="letter">B.</span><span>seabed</span></label>
+<label class="option"><input type="radio" name="q21"><span class="letter">C.</span><span>seabed:</span></label>
+<label class="option"><input type="radio" name="q21"><span class="letter">D.</span><span>seabed and</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+</section>
+<section class="section" id="lst">
+<div class="section-head"><div><h2>Subtype 5: List Boundary</h2><p class="zh">List boundaries: commas for simple items, semicolons for complex items</p></div><span class="tag">Q22–Q24|3 questions</span></div>
+<details class="reminder"><summary>Method reminder</summary><div class="body">
+<p><span class="pattern">a, b, and c | a, a2; b, b2; and c, c2</span></p>
+<p>Bracket every complete item before choosing punctuation. Separate simple items with commas. If items already contain commas, separate the full items with semicolons. Do not split the lead-in from the list it introduces.</p>
+</div></details>
+<article class="question" data-q="22">
+<div class="qhead"><h3 class="qnum">22</h3><span class="difficulty ">Easy</span></div>
+<p class="stem">In her book The Woman Warrior: Memoirs of a Girlhood Among Ghosts, author Maxine Hong Kingston examines themes <span class="blank">_____</span> childhood, womanhood, and Chinese American identity by intertwining autobiography and mythology.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q22"><span class="letter">A.</span><span>of:</span></label>
+<label class="option"><input type="radio" name="q22"><span class="letter">B.</span><span>of</span></label>
+<label class="option"><input type="radio" name="q22"><span class="letter">C.</span><span>of—</span></label>
+<label class="option"><input type="radio" name="q22"><span class="letter">D.</span><span>of,</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+<article class="question" data-q="23">
+<div class="qhead"><h3 class="qnum">23</h3><span class="difficulty ">Easy</span></div>
+<p class="stem">Producing chuño, the freeze-dried potato of the Andean highlands, is a slow process. It requires three consecutive nights of freezing temperatures, several days of <span class="blank">_____</span> and a final soaking in cold running water before the tubers can be stored.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q23"><span class="letter">A.</span><span>sun exposure</span></label>
+<label class="option"><input type="radio" name="q23"><span class="letter">B.</span><span>sun exposure;</span></label>
+<label class="option"><input type="radio" name="q23"><span class="letter">C.</span><span>sun exposure,</span></label>
+<label class="option"><input type="radio" name="q23"><span class="letter">D.</span><span>sun exposure:</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+<article class="question" data-q="24">
+<div class="qhead"><h3 class="qnum">24</h3><span class="difficulty m">Moderate</span></div>
+<p class="stem">The organizers' final report noted that the delegation had drawn performers from three port cities: Salvador, Brazil; Kingston, <span class="blank">_____</span> and Port-au-Prince, Haiti.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q24"><span class="letter">A.</span><span>Jamaica;</span></label>
+<label class="option"><input type="radio" name="q24"><span class="letter">B.</span><span>Jamaica,</span></label>
+<label class="option"><input type="radio" name="q24"><span class="letter">C.</span><span>Jamaica</span></label>
+<label class="option"><input type="radio" name="q24"><span class="letter">D.</span><span>Jamaica:</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+</section>
+<section class="section" id="nop">
+<div class="section-head"><div><h2>Subtype 6: No Punctuation</h2><p class="zh">No punctuation: keep one grammatical unit intact</p></div><span class="tag">Q25–Q30|6 questions</span></div>
+<details class="reminder"><summary>Method reminder</summary><div class="body">
+<p><span class="pattern">subject + verb + object | essential modifier</span></p>
+<p>A blank does not require a mark. Do not split subject from finite verb, verb from object, preposition from object, or an essential modifier from the noun it identifies. Two parallel elements do not automatically need a comma.</p>
+</div></details>
+<article class="question" data-q="25">
+<div class="qhead"><h3 class="qnum">25</h3><span class="difficulty ">Easy</span></div>
+<p class="stem">Winding through the ice atop Norway's Jotunheim Mountains is the Lendbreen pass, an ancient route that was used by hunters, farmers, traders, and travelers in the Middle Ages before eventually falling into disuse. Recently, archeologists have <span class="blank">_____</span> knives, horseshoes, wool tunics, and thousands of other artifacts from the icy pass.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q25"><span class="letter">A.</span><span>unearthed:</span></label>
+<label class="option"><input type="radio" name="q25"><span class="letter">B.</span><span>unearthed,</span></label>
+<label class="option"><input type="radio" name="q25"><span class="letter">C.</span><span>unearthed—</span></label>
+<label class="option"><input type="radio" name="q25"><span class="letter">D.</span><span>unearthed</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+<article class="question" data-q="26">
+<div class="qhead"><h3 class="qnum">26</h3><span class="difficulty ">Easy</span></div>
+<p class="stem">In 1959, marine biologist Dr. Albert Jones founded the Underwater Adventure Seekers, a scuba diving <span class="blank">_____</span> that is the oldest club for Black divers in the United States and that has helped thousands of diving enthusiasts become certified in the field.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q26"><span class="letter">A.</span><span>club</span></label>
+<label class="option"><input type="radio" name="q26"><span class="letter">B.</span><span>club,</span></label>
+<label class="option"><input type="radio" name="q26"><span class="letter">C.</span><span>club—</span></label>
+<label class="option"><input type="radio" name="q26"><span class="letter">D.</span><span>club, and</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+<article class="question" data-q="27">
+<div class="qhead"><h3 class="qnum">27</h3><span class="difficulty m">Moderate</span></div>
+<p class="stem">According to Naomi Nakayama of the University of Edinburgh, the reason seeds from a dying dandelion appear to float in the air while <span class="blank">_____</span> is that their porous plumes enhance drag, allowing the seeds to stay airborne long enough for the wind to disperse them throughout the surrounding area.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q27"><span class="letter">A.</span><span>falling,</span></label>
+<label class="option"><input type="radio" name="q27"><span class="letter">B.</span><span>falling:</span></label>
+<label class="option"><input type="radio" name="q27"><span class="letter">C.</span><span>falling;</span></label>
+<label class="option"><input type="radio" name="q27"><span class="letter">D.</span><span>falling</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+<article class="question" data-q="28">
+<div class="qhead"><h3 class="qnum">28</h3><span class="difficulty d">Difficult</span></div>
+<p class="stem">In 2018, a team of researchers led by Dr. Caitlin Whalen compiled every available measurement of ocean mixing rates from the past two decades. With this novel data set, the team was able to determine how current-driven mixing varies across <span class="blank">_____</span> and what impact it has on the distribution of heat and nutrients in the ocean.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q28"><span class="letter">A.</span><span>regions,</span></label>
+<label class="option"><input type="radio" name="q28"><span class="letter">B.</span><span>regions:</span></label>
+<label class="option"><input type="radio" name="q28"><span class="letter">C.</span><span>regions;</span></label>
+<label class="option"><input type="radio" name="q28"><span class="letter">D.</span><span>regions</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+<article class="question" data-q="29">
+<div class="qhead"><h3 class="qnum">29</h3><span class="difficulty d">Difficult</span></div>
+<p class="stem">The field of geological oceanography owes much to American <span class="blank">_____</span> Marie Tharp, a pioneering oceanographic cartographer whose detailed topographical maps of the ocean floor and its multiple rift valleys helped garner acceptance for the theories of plate tectonics and continental drift.</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q29"><span class="letter">A.</span><span>geologist,</span></label>
+<label class="option"><input type="radio" name="q29"><span class="letter">B.</span><span>geologist</span></label>
+<label class="option"><input type="radio" name="q29"><span class="letter">C.</span><span>geologist;</span></label>
+<label class="option"><input type="radio" name="q29"><span class="letter">D.</span><span>geologist:</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+<article class="question" data-q="30">
+<div class="qhead"><h3 class="qnum">30</h3><span class="difficulty d">Difficult</span></div>
+<p class="stem">The 1977 play And the Soul Shall Dance depicts two Japanese American farming families in Depression-era Southern California. Critics have noted the way pioneering <span class="blank">_____</span> compares the experiences of issei (Japanese nationals who emigrated to America) and nisei (their American-born children).</p>
+<p class="ask">Which choice completes the text so that it conforms to the conventions of Standard English?</p>
+<div class="options">
+<label class="option"><input type="radio" name="q30"><span class="letter">A.</span><span>playwright, Wakako Yamauchi,</span></label>
+<label class="option"><input type="radio" name="q30"><span class="letter">B.</span><span>playwright, Wakako Yamauchi</span></label>
+<label class="option"><input type="radio" name="q30"><span class="letter">C.</span><span>playwright Wakako Yamauchi,</span></label>
+<label class="option"><input type="radio" name="q30"><span class="letter">D.</span><span>playwright Wakako Yamauchi</span></label>
+</div>
+<p class="rule-line"><strong>My rule:</strong> <span class="write-line"></span></p>
+</article>
+</section>
+<section class="checklist"><h2>Check before submitting</h2>
+<ul>
+<li>I wrote one rule for every question instead of relying on sound.</li>
+<li>I marked the subject and finite verb on both sides of each blank.</li>
+<li>For paired punctuation questions, I identified the matching boundary.</li>
+<li>For every colon or dash, I used the period test on the lead-in.</li>
+<li>I marked 3-5 questions that need priority review.</li>
+</ul></section>
+<p class="footer">SAT Reading and Writing · Class 00 · Sentence Boundaries · Student Version</p>
+</main><script>
+document.querySelector('[data-print]')?.addEventListener('click',()=>window.print());
+document.querySelector('[data-clear]')?.addEventListener('click',()=>{
+  document.querySelectorAll('input[type=radio]').forEach(i=>i.checked=false);
+});
+</script>
+</head></html>
