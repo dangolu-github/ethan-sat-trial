@@ -41,6 +41,7 @@
 
   document.getElementById('submit-homework').addEventListener('click', submitHomework);
   if (state.submittedAt) pollForResult(0);
+  if (!token()) setStatus('Saved on this device. Online submission is awaiting teacher service activation.', '');
 
   function freshState() {
     return { assignmentId: assignmentId, assignmentLabel: assignmentLabel, saveId: createId(), studentName: 'Ethan', startedAt: new Date().toISOString(), submittedAt: null, responses: {}, result: null };

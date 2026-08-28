@@ -20,6 +20,7 @@
     updateProgress();
     if (state.result && state.result.checkMode) renderPracticeResult(state.result, false);
     else if (state.submittedAt) pollForResult(0);
+    if (!portalAccessToken()) setStatus('Saved on this device. Online submission is awaiting teacher service activation.', '');
   }
 
   function portalAccessToken() {

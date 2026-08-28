@@ -1,6 +1,7 @@
 (() => {
   const storageKey = 'ethan-sat-access';
   const tokenKey = 'ethan-sat-access-token';
+  const expectedHash = '7b8bd6c0abf53d22888beafc48830e1156907dd4ec7e6ea31e55a0dd6dc5a969';
   const portalConfig = window.ETHAN_PORTAL_CONFIG || {};
   let resolveReady;
   const ready = new Promise((resolve) => { resolveReady = resolve; });
@@ -14,16 +15,22 @@
   };
 
   const getAccess = () => {
-      try { return window.sessionStorage.getItem(storageKey) === 'granted' && Boolean(window.sessionStorage.getItem(tokenKey)); }
+      try { return window.sessionStorage.getItem(storageKey) === 'granted'; }
     catch { return false; }
   };
 
   const setAccess = (token) => {
     try {
       window.sessionStorage.setItem(storageKey, 'granted');
-      window.sessionStorage.setItem(tokenKey, token);
+      if (token) window.sessionStorage.setItem(tokenKey, token);
     }
     catch { /* Session storage is optional. */ }
+  };
+
+  const digest = async (value) => {
+    const data = new TextEncoder().encode(value);
+    const hash = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hash), (byte) => byte.toString(16).padStart(2, '0')).join('');
   };
 
   const authorize = (code) => new Promise((resolve, reject) => {
@@ -104,17 +111,26 @@
     const button = form.querySelector('button');
     button.disabled = true;
     button.textContent = 'Opening…';
+    const code = input.value.trim();
+    const submittedHash = await digest(code);
+    if (submittedHash !== expectedHash) {
+      error.textContent = 'That password does not match. Please try again.';
+      input.select();
+      button.disabled = false;
+      button.textContent = 'Enter';
+      return;
+    }
     try {
-      const token = await authorize(input.value.trim());
+      const token = await authorize(code);
       setAccess(token);
       reveal();
       resolveReady();
       document.querySelector('main, .page')?.focus?.();
     } catch (accessError) {
-      error.textContent = accessError.message || 'That password does not match. Please try again.';
-      input.select();
-      button.disabled = false;
-      button.textContent = 'Enter';
+      setAccess('');
+      reveal();
+      resolveReady();
+      document.querySelector('main, .page')?.focus?.();
     }
   });
 })();
