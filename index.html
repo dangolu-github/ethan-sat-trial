@@ -1,142 +1,83 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="access-pending">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow, noarchive">
-  <meta name="theme-color" content="#142a4f">
-  <title>Ethan's SAT Reading & Writing Portal</title>
-  <script>document.documentElement.classList.add('access-pending');</script>
-  <link rel="stylesheet" href="./assets/portal.css">
-  <link rel="stylesheet" href="./assets/gate.css">
-  <script src="./assets/gate.js" defer></script>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Ethan SAT Workspace</title>
+  <link rel="stylesheet" href="assets/hub.css">
+  <link rel="stylesheet" href="assets/gate.css">
+  <script src="assets/config.js"></script>
+  <script src="assets/gate.js" defer></script>
 </head>
 <body>
-  <div class="shell">
-    <aside class="sidebar" aria-label="Course navigation">
-      <div class="brand"><span class="brand-mark">Ethan · SAT R&amp;W</span><small>Continuation Course</small></div>
-      <p class="side-label">Course</p>
-      <nav class="side-nav">
-        <a href="./" aria-current="page">Dashboard <span>→</span></a>
-        <a href="./course-plan/">Class Logbook <span>20</span></a>
-        <a href="./2026-08-29/">Class 01 <span>01</span></a>
+  <div class="workspace-shell">
+    <aside class="workspace-sidebar">
+      <a class="workspace-brand" href="./"><span class="brand-mark">E</span><span>Ethan SAT</span></a>
+      <div class="sidebar-section">
+        <p class="sidebar-label">Course home</p>
+        <a class="sidebar-home is-active" href="#class-logbook">Class Logbook</a>
+        <a class="sidebar-home" href="#weekly-check">Weekly Self-Learning Check</a>
+        <a class="sidebar-home" href="#skill-booster">Skill Booster</a>
+        <a class="sidebar-home" href="#mistake-logbook">Mistake Logbook</a>
+      </div>
+      <nav class="date-tree" aria-label="Class history">
+        <p class="sidebar-label">Continuation course</p>
+        <a class="tree-link" href="2026-08-29/"><span class="tree-date">08-29</span><span class="tree-title">Class 01 · Reading System I</span></a>
+        <p class="sidebar-label">Trial class</p>
+        <a class="tree-link" href="2026-08-10/"><span class="tree-date">08-10</span><span class="tree-title">Class 00 · SAT Overview + Boundaries</span></a>
       </nav>
-      <p class="side-label">Intensive Practice</p>
-      <nav class="side-nav">
-        <a href="./mock-exams/">Mock Exams <span>4</span></a>
-        <a href="./hm1-sentence-boundaries/">HM1 Practice <span>↗</span></a>
-      </nav>
-      <p class="side-label">Optional Boosters</p>
-      <nav class="side-nav"><a href="./skill-boosters/">Skill Booster <span>+</span></a></nav>
-      <p class="side-label">Review &amp; Retry</p>
-      <nav class="side-nav"><a href="./mistake-log/">Mistake Logbook <span>0</span></a></nav>
-      <p class="side-label">Archive</p>
-      <nav class="side-nav"><a href="./2026-08-10/">Class 00 <span>↗</span></a></nav>
-      <div class="side-note"><strong>Saturday class</strong>9:00–10:00 a.m.<br>Eastern Time</div>
+      <p class="sidebar-note">20 weekly classes · 60 minutes each. Class 00 is the trial class and is outside the 20-hour continuation course.</p>
     </aside>
 
-    <main class="workspace">
-      <div class="topbar">
-        <p>20-week course · updated August 28, 2026</p>
-        <div class="top-actions">
-          <button class="button secondary" type="button" data-print>Save as PDF</button>
-          <a class="button primary" href="./2026-08-29/">Open Class 01</a>
-        </div>
-      </div>
+    <main class="workspace-main" tabindex="-1">
+      <header class="page-header">
+        <div><p class="eyebrow">Reading &amp; Writing</p><h1>Ethan’s SAT workspace</h1><p class="page-intro">Your weekly class pages, self-learning checks, skill practice, and checked mistake review—all in one place.</p></div>
+        <span class="workspace-status"><i></i> Personal course space</span>
+      </header>
 
-      <section class="hero">
-        <div>
-          <p class="eyebrow">SAT Reading and Writing · Continuation</p>
-          <h1>Read with a system.</h1>
-          <p class="hero-copy">Build stronger reading decisions through weekly class practice, themed vocabulary, and focused reading across science, history, social science, and literature.</p>
-          <div class="hero-actions">
-            <a class="button primary" href="./course-plan/">View the 20-week plan</a>
-            <a class="button secondary" href="./hm1-sentence-boundaries/">Continue HM1</a>
-          </div>
+      <section class="month-section" id="class-logbook">
+        <div class="section-heading"><h2>Class Logbook</h2><span>20 × 60-minute continuation course</span></div>
+        <div class="round-start-card">
+          <time datetime="2026-08-29"><span>Aug</span><strong>29</strong></time>
+          <div><p class="round-start-kicker">Class 01 · Upcoming</p><h3>Reading System I</h3><p>Build a repeatable reading route—read, map, limit, answer—and finish only the Sentence Boundaries points left from Class 00.</p></div>
+          <a href="2026-08-29/">Open Class 01 →</a>
         </div>
-        <div class="next-card">
-          <span class="badge planned">Next class</span>
-          <p>Saturday · August 29</p>
-          <strong>Class 01 · Reading System I</strong>
-          <p>9:00–10:00 a.m. Eastern Time</p>
+        <div class="round-start-card" style="margin-top:14px">
+          <time datetime="2026-08-10"><span>Aug</span><strong>10</strong></time>
+          <div><p class="round-start-kicker">Class 00 · Trial complete</p><h3>SAT Overview + Sentence Boundaries</h3><p>Open the original class handout and HM1. HM1 is assigned and still awaiting a formal portal submission.</p></div>
+          <a href="2026-08-10/">Open Class 00 →</a>
         </div>
       </section>
 
-      <section class="section" aria-labelledby="course-at-a-glance">
-        <div class="section-head"><div><h2 id="course-at-a-glance">Course at a glance</h2><p>Twenty weekly classes, four mock checkpoints, and independent study linked to each regular class.</p></div></div>
-        <div class="stat-grid">
-          <div class="stat"><span>First continuation class</span><strong>Aug 29, 2026</strong></div>
-          <div class="stat"><span>Weekly class</span><strong>Saturday · 60 min</strong></div>
-          <div class="stat"><span>Mock checkpoints</span><strong>Classes 04 · 09 · 14 · 19</strong></div>
+      <section class="month-section" id="weekly-check">
+        <div class="section-heading"><h2>Weekly Self-Learning Check</h2><span>Week 1 · Mock-only week</span></div>
+        <div class="booster-grid single-card-grid">
+          <a class="booster-card mock" href="mock-1/"><span class="booster-kicker">Assigned · Week 1</span><h3>Mock 1</h3><p>Complete all 54 Reading and Writing questions as your only Week 1 self-learning task. Your draft saves as you work; use the submit button when finished.</p><span class="booster-link">Start Mock 1 →</span></a>
+        </div>
+        <div class="round-start-card" style="margin-top:14px">
+          <time datetime="2026-08-10"><span>HM</span><strong>1</strong></time>
+          <div><p class="round-start-kicker">Class 00 homework · Assigned</p><h3>Sentence Boundaries · 30 Questions</h3><p>No formal submission receipt is recorded yet. Open the task and submit your first attempt when ready.</p></div>
+          <a href="hm1-sentence-boundaries/">Open HM1 →</a>
         </div>
       </section>
 
-      <section class="section" aria-labelledby="workspace-tools">
-        <div class="section-head"><div><h2 id="workspace-tools">Your workspace</h2><p>Open classes, practice, boosters, and reviewed mistakes from one place.</p></div></div>
-        <div class="card-grid">
-          <article class="card"><span class="badge available">Class Logbook</span><h3>20-Week Course</h3><p>See every class focus and weekly independent-study theme.</p><a href="./course-plan/">Open logbook →</a></article>
-          <article class="card"><span class="badge planned">Intensive Practice</span><h3>Mock Exams</h3><p>Four full mock checkpoints. Mock weeks have no additional homework.</p><a href="./mock-exams/">View mock schedule →</a></article>
-          <article class="card"><span class="badge planned">Optional Boosters</span><h3>Vocabulary, Reading &amp; Skill Booster</h3><p>Use optional vocabulary, subject reading, and four-domain SAT skill practice.</p><a href="./skill-boosters/">Open boosters →</a></article>
-          <article class="card"><span class="badge archive">Review &amp; Retry</span><h3>Mistake Logbook</h3><p>Checked mistakes and retry work will collect here.</p><a href="./mistake-log/">Open Mistake Logbook →</a></article>
+      <section class="month-section" id="skill-booster">
+        <div class="section-heading"><h2>Skill Booster</h2><span>Optional unless a class page says assigned</span></div>
+        <div class="booster-grid">
+          <a class="booster-card" href="skill-boosters/#vocabulary-lab"><span class="booster-kicker">Vocabulary Lab</span><h3>Theme-based vocabulary</h3><p>Build precise word families that support the current reading topic.</p><span class="booster-link">Open lane →</span></a>
+          <a class="booster-card reading" href="skill-boosters/#reading-lab"><span class="booster-kicker">Reading Lab</span><h3>Theme-based reading</h3><p>Use the weekly reading route across science, history, social science, and literature.</p><span class="booster-link">Open lane →</span></a>
+          <a class="booster-card skill" href="skill-boosters/#intensive-skill-booster"><span class="booster-kicker">Intensive Skill Booster</span><h3>SAT skill practice</h3><p>Target one question category at a time across all four Reading and Writing domains.</p><span class="booster-link">Open lane →</span></a>
         </div>
       </section>
 
-      <section class="section" aria-labelledby="learning-route">
-        <div class="section-head">
-          <div><h2 id="learning-route">How the course works</h2><p>Regular weeks connect one class focus to vocabulary and a themed reading. Mock weeks are reserved for the mock only.</p></div>
-          <a class="text-link" href="./course-plan/">See every week →</a>
-        </div>
-        <div class="route">
-          <div class="route-step"><span>Class</span><strong>One clear focus</strong><p>Build one SAT reading or writing method at a time.</p></div>
-          <div class="route-step"><span>Vocabulary</span><strong>One weekly theme</strong><p>Learn words that support the week's reading.</p></div>
-          <div class="route-step"><span>Reading</span><strong>One themed text</strong><p>Apply the method to a new subject.</p></div>
-          <div class="route-step"><span>Mock week</span><strong>Mock only</strong><p>No vocabulary set or extra reading that week.</p></div>
+      <section class="month-section" id="mistake-logbook">
+        <div class="section-heading"><h2>Mistake Logbook</h2><span>Checked work only</span></div>
+        <div class="booster-grid single-card-grid">
+          <a class="booster-card mistakes" href="mistake-log/"><span class="booster-kicker">Review · Retry · Recover</span><h3>Your checked mistake queue</h3><p>Entries appear only after a submitted attempt has been checked. Each entry keeps your choice, the correct answer, and its recovery state separate.</p><span class="booster-link">Open Mistake Logbook →</span></a>
         </div>
       </section>
-
-      <section class="section" aria-labelledby="this-week">
-        <div class="section-head"><div><h2 id="this-week">Class 01</h2><p>Start the reading system and finish any Sentence Boundaries topics left from Class 00.</p></div></div>
-        <div class="card-grid">
-          <article class="card">
-            <span class="badge planned">Class focus</span>
-            <h3>Reading System I</h3>
-            <p>Read → Map → Limit → Answer. Find the job, main idea, and exact answer boundary.</p>
-            <a href="./2026-08-29/">Class overview →</a>
-          </article>
-          <article class="card">
-            <span class="badge planned">Independent study</span>
-            <h3>Change &amp; Scientific Ideas</h3>
-            <p>Vocabulary theme: change and degree. Reading theme: how scientific ideas change.</p>
-            <a href="./2026-08-29/#independent-study">See this week's plan →</a>
-          </article>
-          <article class="card">
-            <span class="badge available">Available</span>
-            <h3>HM1 Sentence Boundaries</h3>
-            <p>Thirty questions covering the full Sentence Boundaries system.</p>
-            <a href="./hm1-sentence-boundaries/">Open practice →</a>
-          </article>
-        </div>
-      </section>
-
-      <section class="section" aria-labelledby="archive">
-        <div class="section-head"><div><h2 id="archive">Previous materials</h2><p>The trial class remains available as Class 00.</p></div></div>
-        <div class="card-grid">
-          <article class="card">
-            <span class="badge archive">Class 00</span>
-            <h3>SAT Overview &amp; Sentence Boundaries</h3>
-            <p>Trial-class handout covering the SAT map and the first Sentence Boundaries topics.</p>
-            <a href="./2026-08-10/">Open Class 00 →</a>
-          </article>
-        </div>
-      </section>
-
-      <div class="notice section">
-        <strong>The weekly details can change.</strong>
-        <p>The overall route stays visible, while readings and practice may adjust as the course progresses.</p>
-      </div>
-      <footer class="footer">Ethan's SAT Reading and Writing Portal · Student materials only</footer>
     </main>
   </div>
-  <script src="./assets/portal.js"></script>
 </body>
 </html>

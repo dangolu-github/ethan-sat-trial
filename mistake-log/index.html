@@ -1,67 +1,25 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="access-pending">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow, noarchive">
-  <meta name="theme-color" content="#142a4f">
-  <title>Mistake Logbook | Ethan SAT</title>
-  <script>document.documentElement.classList.add('access-pending');</script>
-  <link rel="stylesheet" href="../assets/portal.css">
-  <link rel="stylesheet" href="../assets/gate.css">
-  <script src="../assets/gate.js" defer></script>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Mistake Logbook · Ethan SAT</title>
+  <link rel="stylesheet" href="../assets/hub.css"><link rel="stylesheet" href="../assets/gate.css">
+  <style>
+    .summary-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:28px}.summary-card{padding:22px;border:1px solid var(--line-dark);border-radius:14px;background:var(--surface)}.summary-card span{display:block;color:var(--soft);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.summary-card strong{display:block;margin-top:8px;font-size:30px}.log-status{margin-top:24px;padding:18px;border:1px solid var(--line-dark);border-radius:12px;background:rgba(255,255,255,.55);color:var(--muted);line-height:1.6}.mistake-list{display:grid;gap:14px;margin-top:18px}.mistake-card{padding:22px;border:1px solid var(--line-dark);border-radius:14px;background:var(--surface)}.mistake-top{display:flex;justify-content:space-between;gap:16px}.mistake-top h3{margin:0;font-size:18px}.mistake-top span{color:var(--violet);font-size:12px;font-weight:850}.answer-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.answer-box{padding:13px;border-radius:10px;background:var(--paper);color:var(--muted);font-size:13px}.answer-box strong{display:block;margin-bottom:4px;color:var(--ink)}.question-link{display:inline-block;margin-top:15px;color:var(--accent);font-size:12px;font-weight:850;text-decoration:none}@media(max-width:620px){.summary-grid,.answer-pair{grid-template-columns:1fr}}
+  </style>
+  <script src="../assets/config.js"></script><script src="../assets/gate.js" defer></script>
 </head>
-<body>
-  <div class="shell">
-    <aside class="sidebar" aria-label="Course navigation">
-      <div class="brand"><span class="brand-mark">Ethan · SAT R&amp;W</span><small>Review &amp; Retry</small></div>
-      <p class="side-label">Course</p>
-      <nav class="side-nav"><a href="../">Dashboard <span>←</span></a><a href="../course-plan/">Class Logbook <span>20</span></a><a href="../2026-08-29/">Class 01 <span>01</span></a></nav>
-      <p class="side-label">Intensive Practice</p>
-      <nav class="side-nav"><a href="../mock-exams/">Mock Exams <span>4</span></a><a href="../hm1-sentence-boundaries/">HM1 Practice <span>↗</span></a></nav>
-      <p class="side-label">Optional Boosters</p>
-      <nav class="side-nav"><a href="../skill-boosters/">Skill Booster <span>+</span></a></nav>
-      <p class="side-label">Review &amp; Retry</p>
-      <nav class="side-nav"><a href="./" aria-current="page">Mistake Logbook <span>0</span></a></nav>
-      <div class="side-note"><strong>Checked work only</strong>A question appears here after its first answer has been checked.</div>
-    </aside>
-
-    <main class="workspace">
-      <div class="topbar"><p>Checked mistakes and retry work</p><div class="top-actions"><button class="button secondary" type="button" data-print>Save as PDF</button><a class="button primary" href="../">Back to dashboard</a></div></div>
-      <header class="page-header"><p class="eyebrow">Review · Retry · Recover</p><h1>Mistake Logbook</h1><p>Review checked mistakes from homework, intensive practice, and mock exams, then retry them after a delay.</p></header>
-
-      <div class="notice"><strong>No checked entries yet.</strong><p>Your original choice must be recorded and checked before a question is added here.</p></div>
-
-      <section class="section" aria-label="Mistake summary">
-        <div class="stat-grid">
-          <div class="stat"><span>Past mistakes</span><strong>0</strong></div>
-          <div class="stat"><span>Needs review</span><strong>0</strong></div>
-          <div class="stat"><span>Recovered once</span><strong>0</strong></div>
-        </div>
-      </section>
-
-      <section class="section" aria-labelledby="retry-queue">
-        <div class="section-head"><div><h2 id="retry-queue">Retry queue</h2><p>Questions ready for a later retry will appear here.</p></div><span class="badge archive">0 questions</span></div>
-        <div class="focus-panel"><p class="mini-label">Empty for now</p><h3>Keep your first answers</h3><p>Bring your original HM1 responses to Class 01. Checked mistakes can then be added with your answer, the correct answer, the rule or reading step, and the retry date.</p><a class="text-link" href="../hm1-sentence-boundaries/">Open HM1 →</a></div>
-      </section>
-
-      <section class="section" aria-labelledby="log-format">
-        <div class="section-head"><div><h2 id="log-format">What each entry will show</h2><p>Every mistake entry keeps the original attempt and the correction separate.</p></div></div>
-        <div class="route">
-          <div class="route-step"><span>1</span><strong>Question</strong><p>The exact question and skill.</p></div>
-          <div class="route-step"><span>2</span><strong>Your answer</strong><p>Your recorded first choice.</p></div>
-          <div class="route-step"><span>3</span><strong>Correction</strong><p>The correct answer and why.</p></div>
-          <div class="route-step"><span>4</span><strong>Retry</strong><p>A later answer without the explanation open.</p></div>
-        </div>
-      </section>
-
-      <section class="section focus-grid" aria-label="Review states">
-        <article class="focus-panel"><p class="mini-label">Current patterns</p><h2>No pattern recorded yet</h2><p>A pattern is added only after more than one checked question supports it.</p></article>
-        <aside class="focus-panel"><p class="mini-label">Completed retries</p><h3>0 completed</h3><p>Later correct answers will remain separate from the original mistake.</p></aside>
-      </section>
-      <footer class="footer">Mistake Logbook · Checked work only</footer>
-    </main>
-  </div>
-  <script src="../assets/portal.js"></script>
-</body>
-</html>
+<body><div class="workspace-shell">
+  <aside class="workspace-sidebar">
+    <a class="workspace-brand" href="../"><span class="brand-mark">E</span><span>Ethan SAT</span></a>
+    <div class="sidebar-section"><p class="sidebar-label">Mistake Logbook</p><a class="sidebar-home" href="#summary">Summary</a><a class="sidebar-home" href="#retry-queue">Retry queue</a></div>
+    <nav class="date-tree" aria-label="Course navigation"><a class="tree-link" href="../skill-boosters/"><span class="tree-date">Practice</span><span class="tree-title">Skill Booster</span></a><a class="tree-link" href="../mock-1/"><span class="tree-date">Mock 1</span><span class="tree-title">Reading and Writing</span></a></nav>
+    <p class="sidebar-note">A question appears here only after a deliberate submission has been checked by your teacher.</p>
+  </aside>
+  <main class="workspace-main" tabindex="-1">
+    <a class="back-link" href="../"><span aria-hidden="true">←</span> Course home</a>
+    <header class="page-header" style="margin-top:34px"><div><p class="eyebrow">Review · Retry · Recover</p><h1>Mistake Logbook</h1><p class="page-intro">Review checked mistakes from homework and mocks while keeping your original choice and the correction separate.</p></div><span class="workspace-status"><i></i> Checked work only</span></header>
+    <section id="summary" class="summary-grid" aria-label="Mistake summary"><div class="summary-card"><span>Checked mistakes</span><strong id="past-count">0</strong></div><div class="summary-card"><span>Needs review</span><strong id="review-count">0</strong></div><div class="summary-card"><span>Recovered</span><strong id="recovered-count">0</strong></div></section>
+    <section class="month-section" id="retry-queue"><div class="section-heading"><h2>Retry queue</h2><span id="queue-count">Loading…</span></div><div class="log-status" id="log-status" aria-live="polite">Loading checked entries…</div><div class="mistake-list" id="mistake-list"></div></section>
+  </main>
+</div><script src="../assets/mistake-log.js"></script></body></html>

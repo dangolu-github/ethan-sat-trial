@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow, noarchive"><script>document.documentElement.classList.add('access-pending');</script><link rel="stylesheet" href="../assets/gate.css"><script src="../assets/gate.js" defer></script>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow, noarchive"><script>document.documentElement.classList.add('access-pending');</script><link rel="stylesheet" href="../assets/gate.css"><script src="../assets/config.js"></script><script src="../assets/gate.js" defer></script>
 <title>Ethan HM 1 | Sentence Boundaries | 30 Questions</title>
 <style>
 :root{--ink:#17233b;--muted:#5d687b;--blue:#2157b6;--blue2:#173f88;--pale:#eef4ff;--line:#d5deed;--paper:#fff;--green:#e8f6ed;--gold:#fff6df;--shadow:0 18px 50px rgba(35,54,91,.13)}
@@ -46,6 +46,11 @@ h1{margin:.35rem 0 .7rem;color:#102751;font-size:clamp(1.9rem,4.6vw,2.9rem);line
 .checklist h2{margin:.05rem 0 .5rem;color:#245d38;font-size:1.25rem}
 .checklist ul{margin:.4rem 0 0;padding-left:1.2rem}.checklist li{margin:.25rem 0}
 .footer{margin-top:2.8rem;padding-top:1rem;border-top:1px solid var(--line);color:var(--muted);font-size:.82rem}
+.submission-panel{position:sticky;z-index:5;bottom:12px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px;align-items:center;margin-top:26px;padding:17px 18px;border:1px solid #b9cae1;border-radius:17px;background:rgba(244,248,253,.97);box-shadow:0 14px 40px rgba(30,48,78,.16)}
+.submission-copy strong,.submission-copy span{display:block}.submission-copy span{margin-top:4px;color:var(--muted);font-size:.82rem}.submission-copy span.is-success{color:#245d38}.submission-copy span.is-error{color:#8f2f2f}
+.submit-homework{min-height:46px;padding:10px 18px;border:0;border-radius:11px;background:var(--blue2);color:#fff;font-weight:900;cursor:pointer}.submit-homework:disabled{opacity:.68;cursor:wait}
+.submission-receipt{margin-top:18px;padding:15px 17px;border:1px solid #b9ddc5;border-radius:12px;background:var(--green);color:#245d38}.submission-receipt[hidden]{display:none}
+.option.is-correct{border-color:#48a878;background:#e8f6ed}.option.is-wrong{border-color:#d66d78;background:#fdeaea}
 /* teacher-only */
 .tmap{margin:1.6rem 0;border:1px solid var(--line);border-radius:12px;overflow:auto}
 table{border-collapse:collapse;width:100%;font-size:.86rem;min-width:760px}
@@ -60,7 +65,7 @@ th{background:#f2f6fd;color:var(--blue2);font-weight:900;white-space:nowrap}
 .diag b{color:var(--blue2)}
 .prov{margin-top:10px;color:var(--muted);font-size:.8rem;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 .warn{margin:1.2rem 0;padding:14px 16px;border-left:5px solid #c58a12;border-radius:0 10px 10px 0;background:var(--gold)}
-@media(max-width:720px){.page{width:100%;margin:0;padding:30px 18px 44px;border-radius:0;box-shadow:none}.toolbar{margin:-14px 0 20px;justify-content:flex-start;flex-wrap:wrap}.overview{grid-template-columns:1fr 1fr}.options{grid-template-columns:1fr}.section-head{display:block}.section-head .tag{margin-top:8px}.write-line{width:65%}body{overflow-x:hidden}.page{max-width:100%;overflow:hidden}.page>*{min-width:0}.directions,.question,.section,.overview,.stem{max-width:100%;min-width:0}.directions li,.stem,.subtitle{overflow-wrap:anywhere}}
+@media(max-width:720px){.page{width:100%;margin:0;padding:30px 18px 44px;border-radius:0;box-shadow:none}.toolbar{margin:-14px 0 20px;justify-content:flex-start;flex-wrap:wrap}.overview{grid-template-columns:1fr 1fr}.options{grid-template-columns:1fr}.section-head{display:block}.section-head .tag{margin-top:8px}.write-line{width:65%}body{overflow-x:hidden}.page{max-width:100%;overflow:hidden}.page>*{min-width:0}.directions,.question,.section,.overview,.stem{max-width:100%;min-width:0}.directions li,.stem,.subtitle{overflow-wrap:anywhere}.submission-panel{align-items:stretch}.submit-homework{width:100%}}
 @media print{@page{size:Letter;margin:.48in}body{background:#fff;font-size:10.5pt}.page{width:auto;margin:0;padding:0;border-radius:0;box-shadow:none}.toolbar{display:none}.question{break-inside:avoid}.reminder[open] .body{display:block}}
 </style>
 <main class="page">
@@ -493,11 +498,7 @@ th{background:#f2f6fd;color:var(--blue2);font-weight:900;white-space:nowrap}
 <li>For every colon or dash, I used the period test on the lead-in.</li>
 <li>I marked 3-5 questions that need priority review.</li>
 </ul></section>
+<section class="submission-receipt" id="submission-receipt" aria-live="polite" hidden></section>
+<section class="submission-panel" aria-label="Submit homework"><div class="submission-copy"><strong>Submit homework</strong><span id="save-status" aria-live="polite">Saved on this device.</span></div><button class="submit-homework" id="submit-homework" type="button">Submit HM1</button></section>
 <p class="footer">SAT Reading and Writing · Class 00 · Sentence Boundaries · Student Version</p>
-</main><script>
-document.querySelector('[data-print]')?.addEventListener('click',()=>window.print());
-document.querySelector('[data-clear]')?.addEventListener('click',()=>{
-  document.querySelectorAll('input[type=radio]').forEach(i=>i.checked=false);
-});
-</script>
-</head></html>
+</main><script src="../assets/hm1.js"></script></body></html>

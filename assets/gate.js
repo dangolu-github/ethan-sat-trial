@@ -1,22 +1,60 @@
 (() => {
   const storageKey = 'ethan-sat-access';
-  const expectedHash = '7b8bd6c0abf53d22888beafc48830e1156907dd4ec7e6ea31e55a0dd6dc5a969';
+  const tokenKey = 'ethan-sat-access-token';
+  const portalConfig = window.ETHAN_PORTAL_CONFIG || {};
+  let resolveReady;
+  const ready = new Promise((resolve) => { resolveReady = resolve; });
+
+  window.EthanPortalAccess = {
+    ready,
+    getToken: () => {
+      try { return window.sessionStorage.getItem(tokenKey) || ''; }
+      catch { return ''; }
+    }
+  };
 
   const getAccess = () => {
-    try { return window.sessionStorage.getItem(storageKey) === 'granted'; }
+      try { return window.sessionStorage.getItem(storageKey) === 'granted' && Boolean(window.sessionStorage.getItem(tokenKey)); }
     catch { return false; }
   };
 
-  const setAccess = () => {
-    try { window.sessionStorage.setItem(storageKey, 'granted'); }
+  const setAccess = (token) => {
+    try {
+      window.sessionStorage.setItem(storageKey, 'granted');
+      window.sessionStorage.setItem(tokenKey, token);
+    }
     catch { /* Session storage is optional. */ }
   };
 
-  const digest = async (value) => {
-    const data = new TextEncoder().encode(value);
-    const hash = await crypto.subtle.digest('SHA-256', data);
-    return Array.from(new Uint8Array(hash), (byte) => byte.toString(16).padStart(2, '0')).join('');
-  };
+  const authorize = (code) => new Promise((resolve, reject) => {
+    if (!portalConfig.submissionEndpoint) {
+      reject(new Error('Course access service is unavailable.'));
+      return;
+    }
+    const callbackName = `__ethanAccess${Date.now()}${Math.random().toString(16).slice(2)}`;
+    const script = document.createElement('script');
+    const timeout = window.setTimeout(() => {
+      cleanup();
+      reject(new Error('Course access timed out.'));
+    }, 12000);
+    const cleanup = () => {
+      window.clearTimeout(timeout);
+      delete window[callbackName];
+      script.remove();
+    };
+    window[callbackName] = (data) => {
+      cleanup();
+      if (data && data.ok && data.accessToken) resolve(data.accessToken);
+      else reject(new Error((data && data.error) || 'Incorrect course password.'));
+    };
+    script.onerror = () => {
+      cleanup();
+      reject(new Error('Course access service could not be reached.'));
+    };
+    const query = new URLSearchParams({ action: 'authorizeAccess', code, callback: callbackName, _: String(Date.now()) });
+    script.src = `${portalConfig.submissionEndpoint}?${query.toString()}`;
+    document.head.appendChild(script);
+  });
 
   const reveal = () => {
     document.documentElement.classList.remove('access-pending');
@@ -27,6 +65,7 @@
 
   if (getAccess()) {
     reveal();
+    resolveReady();
     return;
   }
 
@@ -62,15 +101,20 @@
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     error.textContent = '';
-    const submittedHash = await digest(input.value.trim());
-    if (submittedHash !== expectedHash) {
-      error.textContent = 'That password does not match. Please try again.';
+    const button = form.querySelector('button');
+    button.disabled = true;
+    button.textContent = 'Opening…';
+    try {
+      const token = await authorize(input.value.trim());
+      setAccess(token);
+      reveal();
+      resolveReady();
+      document.querySelector('main, .page')?.focus?.();
+    } catch (accessError) {
+      error.textContent = accessError.message || 'That password does not match. Please try again.';
       input.select();
-      return;
+      button.disabled = false;
+      button.textContent = 'Enter';
     }
-    setAccess();
-    reveal();
-    document.querySelector('main, .page')?.focus?.();
   });
 })();
-
