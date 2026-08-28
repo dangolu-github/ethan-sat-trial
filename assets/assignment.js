@@ -8,6 +8,7 @@
   var isReview = config.mode === 'review';
   var state = isReview ? null : loadState();
   var saveTimer = null;
+  var portalReady = window.EthanPortalAccess && window.EthanPortalAccess.ready ? window.EthanPortalAccess.ready : Promise.resolve();
 
   document.body.dataset.examMode = isReview ? 'review' : 'practice';
   renderQuestionPage();
@@ -20,7 +21,7 @@
     updateProgress();
     if (state.result && state.result.checkMode) renderPracticeResult(state.result, false);
     else if (state.submittedAt) pollForResult(0);
-    if (!portalAccessToken()) setStatus('Saved on this device. Online submission is awaiting teacher service activation.', '');
+    if (!portalAccessToken()) setStatus('Ready when you are.', '');
   }
 
   function portalAccessToken() {
@@ -148,7 +149,7 @@
     if (answer) state.responses[number] = { answer: answer };
     else delete state.responses[number];
     updateSelectedOption(number);
-    saveLocal('Saved on this device · syncing with Teacher…', '');
+    saveLocal('Saving…', '');
     updateProgress();
     scheduleProgressSave();
   }
@@ -180,9 +181,9 @@
     state.updatedAt = new Date().toISOString();
     try {
       localStorage.setItem(storageKey(), JSON.stringify(state));
-      setStatus(message || 'Saved on this device.', type || '');
+      setStatus(message || 'Progress saved.', type || '');
     } catch (error) {
-      setStatus('This browser could not save the latest answer.', 'error');
+      setStatus('We couldn\'t save that answer. Please try again.', 'error');
     }
   }
 
@@ -195,13 +196,14 @@
   async function saveProgress() {
     if (!portalConfig.submissionEndpoint || state.result) return;
     try {
+      await portalReady;
       await fetch(portalConfig.submissionEndpoint, {
         method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(Object.assign({}, state, { action: 'saveProgress', accessToken: portalAccessToken(), saveId: state.submissionId }))
       });
-      setStatus('Saved on this device and synced with Teacher.', 'success');
+      setStatus('Progress saved.', 'success');
     } catch (error) {
-      setStatus('Saved on this device. Online sync will retry after another change.', 'error');
+      setStatus('Progress saved. We\'ll try again shortly.', '');
     }
   }
 
@@ -209,12 +211,12 @@
     if (state.result) return;
     var button = document.getElementById('submit-exam');
     button.disabled = true;
-    button.textContent = 'Checking status…';
+    button.textContent = 'Preparing submission…';
     jsonp('getAssignmentState', { assignmentId: config.assignmentId, environment: state.environment, saveId: state.submissionId })
       .then(function (data) {
         if (data && (!data.receiving || data.archived)) {
           button.textContent = 'Receiving stopped';
-          setStatus('This practice page is read-only. Existing submitted work is preserved.', 'error');
+          setStatus('This practice is currently closed. Your answers are still here.', 'error');
           return;
         }
         button.disabled = false;
@@ -224,7 +226,7 @@
       .catch(function () {
         button.disabled = false;
         button.textContent = 'Try again';
-        setStatus('Assignment status could not be checked. Try again before submitting.', 'error');
+        setStatus('We couldn\'t prepare the submission. Please try again.', 'error');
       });
   }
 
@@ -248,9 +250,9 @@
       return;
     }
     state.studentName = enteredName;
-    saveLocal('Ready to send.', '');
+    saveLocal('Ready to submit.', '');
     if (!portalConfig.submissionEndpoint) {
-      setStatus('Answers remain saved locally. Checking service is unavailable.', 'error');
+      setStatus('We couldn\'t submit yet. Your answers are still here.', 'error');
       return;
     }
     var button = document.getElementById('submit-exam');
@@ -258,17 +260,18 @@
     button.textContent = 'Sending answers…';
     var submittedAt = new Date().toISOString();
     try {
+      await portalReady;
       await fetch(portalConfig.submissionEndpoint, {
         method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(Object.assign({}, state, { action: 'submitHomework', accessToken: portalAccessToken(), saveId: state.submissionId, submittedAt: submittedAt }))
       });
       state.submittedAt = submittedAt;
-      saveLocal('Submission sent · loading corrections…', '');
-      button.textContent = 'Loading corrections…';
+      saveLocal('Submitting…', '');
+      button.textContent = 'Submitting…';
       pollForResult(0);
     } catch (error) {
       state.submittedAt = null;
-      saveLocal('Answers could not be sent. They remain saved on this device.', 'error');
+      saveLocal('We couldn\'t submit. Your answers are still here. Please try again.', 'error');
       button.disabled = false;
       button.textContent = 'Try submitting again';
     }
@@ -281,16 +284,16 @@
         if (data && data.ok && data.found) {
           state.result = data;
           state.submittedAt = data.submittedAt || state.submittedAt;
-          saveLocal('Answers checked and saved in Teacher register.', 'success');
+          saveLocal(data.checkMode ? 'Feedback ready.' : 'Submitted successfully.', 'success');
           renderPracticeResult(data, true);
           return;
         }
         if (attempt < 12) setTimeout(function () { pollForResult(attempt + 1); }, Math.min(900 + attempt * 300, 3000));
-        else resetAfterPollingFailure('No checked result was confirmed. Answers remain saved; try again.');
+        else resetAfterPollingFailure('We couldn\'t confirm the submission. Your answers are still here. Please try again.');
       })
       .catch(function () {
         if (attempt < 12) setTimeout(function () { pollForResult(attempt + 1); }, 1700);
-        else resetAfterPollingFailure('Correction service did not respond. Answers remain saved.');
+        else resetAfterPollingFailure('Feedback could not be loaded. Your answers are still here. Please try again.');
       });
   }
 
@@ -317,8 +320,8 @@
     box.hidden = false;
     if (result.checkMode) {
       box.innerHTML = '<strong>' + escapeHtml(result.score) + ' / ' + escapeHtml(result.total) + '</strong><span>' + escapeHtml(result.percent) + '% correct</span><p>Correct answers are highlighted in green. Your incorrect selections are marked in red.</p>';
-    } else box.innerHTML = '<strong>Submission received</strong><span>Your first attempt is safely recorded.</span><p>Your teacher will release checked answers after review.</p>';
-    setStatus(testMode ? 'Teacher test result.' : 'Submission receipt confirmed.', 'success');
+    } else box.innerHTML = '<strong>Submitted</strong><span>Your answers have been saved.</span><p>Feedback will appear here when it is ready.</p>';
+    setStatus(result.checkMode ? 'Feedback ready.' : 'Submitted successfully.', 'success');
     updateProgress();
     if (shouldFocus) {
       box.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -364,9 +367,9 @@
     }).then(function (data) {
       if (!data || !data.ok || !Array.isArray(data.answers) || data.answers.length !== config.count) throw new Error('Answer key unavailable');
       data.answers.forEach(function (answer, index) { renderReviewAnswer(index + 1, String(answer || '')); });
-      setReviewStatus('All verified answers are shown inside the original option sets. Review Mode created no attempt or score.', 'success');
+      setReviewStatus('Verified answers are shown below.', 'success');
     }).catch(function () {
-      setReviewStatus('The verified answers could not be loaded. Check portal access and try reloading this page.', 'error');
+      setReviewStatus('Answers could not be loaded. Please refresh and try again.', 'error');
     });
   }
 
@@ -425,7 +428,7 @@
   }
 
   function jsonp(action, parameters) {
-    return new Promise(function (resolve, reject) {
+    return portalReady.then(function () { return new Promise(function (resolve, reject) {
       if (!portalConfig.submissionEndpoint) { reject(new Error('Submission endpoint unavailable')); return; }
       var args = Object.assign({}, parameters, { accessToken: portalAccessToken() });
       var callbackName = '__ethanAssignment' + Date.now() + Math.random().toString(16).slice(2);
@@ -440,7 +443,7 @@
       query.push('_=' + Date.now());
       script.src = portalConfig.submissionEndpoint + '?' + query.join('&');
       document.head.appendChild(script);
-    });
+    }); });
   }
 
   function createId(key) {

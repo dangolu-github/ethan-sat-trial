@@ -5,6 +5,7 @@
   var endpoint = (window.ETHAN_PORTAL_CONFIG || {}).submissionEndpoint || '';
   var storageKey = 'ethan-hm1-boundaries-first-attempt';
   var saveTimer = null;
+  var ready = window.EthanPortalAccess && window.EthanPortalAccess.ready ? window.EthanPortalAccess.ready : Promise.resolve();
   var state = loadState();
   var questions = Array.from(document.querySelectorAll('[data-q]'));
 
@@ -25,7 +26,7 @@
     if (state.submittedAt) return;
     document.querySelectorAll('input[type="radio"]').forEach(function (input) { input.checked = false; });
     state.responses = {};
-    saveLocal('Choices cleared on this device.', '');
+    saveLocal('Choices cleared.', '');
   });
 
   questions.forEach(function (question) {
@@ -33,7 +34,7 @@
       var input = event.target.closest('input[type="radio"]');
       if (!input || state.submittedAt) return;
       state.responses[input.dataset.number] = input.value;
-      saveLocal('Saved on this device · syncing with Teacher…', '');
+      saveLocal('Saving…', '');
       window.clearTimeout(saveTimer);
       saveTimer = window.setTimeout(function () { sendProgress(false); }, 850);
     });
@@ -41,7 +42,7 @@
 
   document.getElementById('submit-homework').addEventListener('click', submitHomework);
   if (state.submittedAt) pollForResult(0);
-  if (!token()) setStatus('Saved on this device. Online submission is awaiting teacher service activation.', '');
+  if (!token()) setStatus('Ready when you are.', '');
 
   function freshState() {
     return { assignmentId: assignmentId, assignmentLabel: assignmentLabel, saveId: createId(), studentName: 'Ethan', startedAt: new Date().toISOString(), submittedAt: null, responses: {}, result: null };
@@ -63,11 +64,13 @@
 
   function sendProgress(submitted) {
     if (!endpoint) return Promise.reject(new Error('Submission service unavailable.'));
-    return fetch(endpoint, {
-      method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: submitted ? 'submitHomework' : 'saveProgress', accessToken: token(), assignmentId: assignmentId, assignmentLabel: assignmentLabel, saveId: state.saveId, responses: state.responses, studentName: state.studentName, submittedAt: submitted ? state.submittedAt : null })
+    return ready.then(function () {
+      return fetch(endpoint, {
+        method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: submitted ? 'submitHomework' : 'saveProgress', accessToken: token(), assignmentId: assignmentId, assignmentLabel: assignmentLabel, saveId: state.saveId, responses: state.responses, studentName: state.studentName, submittedAt: submitted ? state.submittedAt : null })
+      });
     }).then(function () {
-      if (!submitted) setStatus('Saved on this device and synced with Teacher.', 'success');
+      if (!submitted) setStatus('Progress saved.', 'success');
     });
   }
 
@@ -79,13 +82,13 @@
     if (enteredName === null || !enteredName.trim()) { setStatus('Submission cancelled. Type your name when ready.', 'error'); return; }
     state.studentName = enteredName.trim().slice(0, 80);
     state.submittedAt = new Date().toISOString();
-    saveLocal('Sending your first attempt…', '');
+    saveLocal('Submitting…', '');
     var button = document.getElementById('submit-homework');
     button.disabled = true;
     button.textContent = 'Sending…';
     sendProgress(true).then(function () { pollForResult(0); }).catch(function () {
       state.submittedAt = null;
-      saveLocal('Submission could not be sent. Your answers remain saved.', 'error');
+      saveLocal('We couldn\'t submit. Your answers are still here. Please try again.', 'error');
       button.disabled = false;
       button.textContent = 'Try submitting again';
     });
@@ -104,7 +107,7 @@
 
   function renderReceipt(result) {
     state.result = result;
-    saveLocal('Submission receipt confirmed.', 'success');
+    saveLocal('Submitted successfully.', 'success');
     document.querySelectorAll('input[type="radio"]').forEach(function (input) { input.disabled = true; });
     var button = document.getElementById('submit-homework');
     button.disabled = true;
@@ -122,19 +125,19 @@
           if (value === selected && value !== result.correctAnswers[index]) label.classList.add('is-wrong');
         });
       });
-    } else receipt.innerHTML = '<strong>Submission received.</strong><br>Your first attempt is safely recorded. Checked answers will be released after teacher review.';
+    } else receipt.innerHTML = '<strong>Submitted.</strong><br>Your answers have been saved. Feedback will appear here when it is ready.';
   }
 
   function submissionUnconfirmed() {
     state.submittedAt = null;
-    saveLocal('No submission receipt was confirmed. Your answers remain saved; please try again.', 'error');
+    saveLocal('We couldn\'t confirm the submission. Your answers are still here. Please try again.', 'error');
     var button = document.getElementById('submit-homework');
     button.disabled = false;
     button.textContent = 'Try submitting again';
   }
 
   function jsonp(action, parameters) {
-    return new Promise(function (resolve, reject) {
+    return ready.then(function () { return new Promise(function (resolve, reject) {
       if (!endpoint) { reject(new Error('Submission service unavailable.')); return; }
       var callbackName = '__ethanHm1' + Date.now() + Math.random().toString(16).slice(2);
       var script = document.createElement('script');
@@ -145,7 +148,7 @@
       script.onerror = function () { cleanup(); reject(new Error('Unable to load')); };
       script.src = endpoint + '?' + Object.keys(args).map(function (key) { return encodeURIComponent(key) + '=' + encodeURIComponent(args[key]); }).join('&');
       document.head.appendChild(script);
-    });
+    }); });
   }
 
   function setStatus(message, type) {

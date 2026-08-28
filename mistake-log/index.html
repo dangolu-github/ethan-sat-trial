@@ -7,19 +7,19 @@
   <style>
     .summary-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:28px}.summary-card{padding:22px;border:1px solid var(--line-dark);border-radius:14px;background:var(--surface)}.summary-card span{display:block;color:var(--soft);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.summary-card strong{display:block;margin-top:8px;font-size:30px}.log-status{margin-top:24px;padding:18px;border:1px solid var(--line-dark);border-radius:12px;background:rgba(255,255,255,.55);color:var(--muted);line-height:1.6}.mistake-list{display:grid;gap:14px;margin-top:18px}.mistake-card{padding:22px;border:1px solid var(--line-dark);border-radius:14px;background:var(--surface)}.mistake-top{display:flex;justify-content:space-between;gap:16px}.mistake-top h3{margin:0;font-size:18px}.mistake-top span{color:var(--violet);font-size:12px;font-weight:850}.answer-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.answer-box{padding:13px;border-radius:10px;background:var(--paper);color:var(--muted);font-size:13px}.answer-box strong{display:block;margin-bottom:4px;color:var(--ink)}.question-link{display:inline-block;margin-top:15px;color:var(--accent);font-size:12px;font-weight:850;text-decoration:none}@media(max-width:620px){.summary-grid,.answer-pair{grid-template-columns:1fr}}
   </style>
-  <script src="../assets/config.js"></script><script src="../assets/gate.js" defer></script>
+  <script src="../assets/config.js"></script><script src="../assets/gate.js?v=20260828c" defer></script>
 </head>
 <body><div class="workspace-shell">
   <aside class="workspace-sidebar">
     <a class="workspace-brand" href="../"><span class="brand-mark">E</span><span>Ethan SAT</span></a>
     <div class="sidebar-section"><p class="sidebar-label">Mistake Logbook</p><a class="sidebar-home" href="#summary">Summary</a><a class="sidebar-home" href="#retry-queue">Retry queue</a></div>
     <nav class="date-tree" aria-label="Course navigation"><a class="tree-link" href="../skill-boosters/"><span class="tree-date">Practice</span><span class="tree-title">Skill Booster</span></a><a class="tree-link" href="../mock-1/"><span class="tree-date">Mock 1</span><span class="tree-title">Reading and Writing</span></a></nav>
-    <p class="sidebar-note">A question appears here only after a deliberate submission has been checked by your teacher.</p>
+    <p class="sidebar-note">Questions you have reviewed will appear here for another try.</p>
   </aside>
   <main class="workspace-main" tabindex="-1">
     <a class="back-link" href="../"><span aria-hidden="true">←</span> Course home</a>
-    <header class="page-header" style="margin-top:34px"><div><p class="eyebrow">Review · Retry · Recover</p><h1>Mistake Logbook</h1><p class="page-intro">Review checked mistakes from homework and mocks while keeping your original choice and the correction separate.</p></div><span class="workspace-status"><i></i> Checked work only</span></header>
+    <header class="page-header" style="margin-top:34px"><div><p class="eyebrow">Review · Retry · Recover</p><h1>Mistake Logbook</h1><p class="page-intro">Return to difficult questions, compare your first choice with the correction, and try again.</p></div><span class="workspace-status"><i></i> Review practice</span></header>
     <section id="summary" class="summary-grid" aria-label="Mistake summary"><div class="summary-card"><span>Checked mistakes</span><strong id="past-count">0</strong></div><div class="summary-card"><span>Needs review</span><strong id="review-count">0</strong></div><div class="summary-card"><span>Recovered</span><strong id="recovered-count">0</strong></div></section>
-    <section class="month-section" id="retry-queue"><div class="section-heading"><h2>Retry queue</h2><span id="queue-count">Loading…</span></div><div class="log-status" id="log-status" aria-live="polite">Loading checked entries…</div><div class="mistake-list" id="mistake-list"></div></section>
+    <section class="month-section" id="retry-queue"><div class="section-heading"><h2>Retry queue</h2><span id="queue-count">Loading…</span></div><div class="log-status" id="log-status" aria-live="polite">Loading your review list…</div><div class="mistake-list" id="mistake-list"></div></section>
   </main>
-</div><script src="../assets/mistake-log.js"></script></body></html>
+</div><script src="../assets/mistake-log.js?v=20260828b" defer></script></body></html>

@@ -2,7 +2,7 @@
   'use strict';
   var endpoint = (window.ETHAN_PORTAL_CONFIG || {}).submissionEndpoint || '';
   var ready = window.EthanPortalAccess && window.EthanPortalAccess.ready ? window.EthanPortalAccess.ready : Promise.resolve();
-  ready.then(loadMistakes).catch(function () { showError('Checked entries could not be loaded. Re-enter the course password and try again.'); });
+  ready.then(loadMistakes).catch(function () { showError('Your review list could not be loaded. Please refresh and try again.'); });
 
   function token() { return window.EthanPortalAccess ? window.EthanPortalAccess.getToken() : ''; }
 
@@ -22,7 +22,7 @@
     document.getElementById('queue-count').textContent = items.length + (items.length === 1 ? ' question' : ' questions');
     var status = document.getElementById('log-status');
     if (!items.length) {
-      status.innerHTML = '<strong>No checked entries yet.</strong><br>Your original choice and the correct answer must both be confirmed before a question is added here.';
+      status.innerHTML = '<strong>No questions here yet.</strong><br>Questions you review will appear here for another try.';
       return;
     }
     status.hidden = true;
