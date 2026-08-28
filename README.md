@@ -15,6 +15,8 @@ Student-facing GitHub Pages portal for Ethan's SAT Reading and Writing course.
 
 ## Access and privacy
 
-The static learner site requests a short-lived server-issued access token after the course password is entered. The repository and static question assets remain public, so answer keys, teacher notes, source maps, internal question IDs, learner responses, scores, and private records stay outside this repository.
+The learner enters the course password once in a browser. A successful entry stores an opaque trusted-browser credential—not the password—and silently renews short-lived access on later visits. A new browser or device, private browsing, or cleared site data requires the password again.
 
-All learner routes use `noindex` metadata. Homework and mock pages preserve local drafts, sync progress to the private Ethan service, and require a visible learner-controlled submit action before creating a submission receipt. Checked answers remain off until released from the authenticated Teacher Portal.
+The Teacher Portal remains Google owner-only and never asks the teacher for Ethan's password. Its learner-preview links can trust the teacher's current browser without exposing the credential in the finished learner URL.
+
+The repository and static question assets remain public, so answer keys, teacher notes, source maps, internal question IDs, learner responses, scores, and private records stay outside this repository. All learner routes use `noindex` metadata. Homework and mock pages preserve drafts and require a visible learner-controlled submit action. Checked answers remain off until released from the authenticated Teacher Portal.
