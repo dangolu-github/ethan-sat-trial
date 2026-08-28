@@ -47,7 +47,7 @@
 
   function questionMarkup(number, localNumber, moduleLabel) {
     var folder = config.imageBase + '/q' + String(number).padStart(2, '0');
-    var prompt = config.key === 'rw'
+    var prompt = (config.promptLayout === 'split' || config.key === 'rw')
       ? '<div class="prompt-grid rw-prompt"><a class="prompt-zoom" href="' + folder + '/prompt-left.webp' + imageVersion + '" target="_blank" rel="noopener" aria-label="Open passage full size"><img class="prompt-image" src="' + folder + '/prompt-left.webp' + imageVersion + '" alt="' + escapeHtml(moduleLabel + ' question ' + localNumber + ' passage') + '" loading="lazy"></a><a class="prompt-zoom" href="' + folder + '/prompt-right.webp' + imageVersion + '" target="_blank" rel="noopener" aria-label="Open question stem full size"><img class="prompt-image" src="' + folder + '/prompt-right.webp' + imageVersion + '" alt="' + escapeHtml(moduleLabel + ' question ' + localNumber + ' stem') + '" loading="lazy"></a></div>'
       : '<div class="prompt-grid single"><a class="prompt-zoom" href="' + folder + '/prompt.webp' + imageVersion + '" target="_blank" rel="noopener" aria-label="Open question prompt full size"><img class="prompt-image" src="' + folder + '/prompt.webp' + imageVersion + '" alt="' + escapeHtml(moduleLabel + ' question ' + localNumber + ' prompt') + '" loading="lazy"></a></div>';
     var numeric = config.numericQuestions.indexOf(number) !== -1;
