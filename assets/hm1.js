@@ -1,9 +1,12 @@
 (function () {
   'use strict';
-  var assignmentId = 'eth-class-00-hm1-boundaries-30q';
-  var assignmentLabel = 'HM1 · Sentence Boundaries · 30 Questions';
+  var homeworkConfig = window.ETHAN_HOMEWORK_CONFIG || {};
+  var assignmentId = homeworkConfig.assignmentId || 'eth-class-00-hm1-boundaries-30q';
+  var assignmentLabel = homeworkConfig.assignmentLabel || 'HM1 · Sentence Boundaries · 30 Questions';
+  var questionCount = Number(homeworkConfig.count || 30);
+  var submitButtonLabel = homeworkConfig.submitButtonLabel || 'Submit HM1';
   var endpoint = (window.ETHAN_PORTAL_CONFIG || {}).submissionEndpoint || '';
-  var storageKey = 'ethan-hm1-boundaries-first-attempt';
+  var storageKey = homeworkConfig.storageKey || 'ethan-hm1-boundaries-first-attempt';
   var saveTimer = null;
   var ready = window.EthanPortalAccess && window.EthanPortalAccess.ready ? window.EthanPortalAccess.ready : Promise.resolve();
   var state = loadState();
@@ -21,12 +24,23 @@
     });
   });
 
+  Array.from(document.querySelectorAll('textarea[id]')).forEach(function (field) {
+    if (state.notes && Object.prototype.hasOwnProperty.call(state.notes, field.id)) field.value = state.notes[field.id];
+    field.addEventListener('input', function () {
+      if (state.submittedAt) return;
+      state.notes[field.id] = field.value;
+      saveLocal('Working notes saved on this browser.', 'success');
+    });
+  });
+
   document.querySelector('[data-print]')?.addEventListener('click', function () { window.print(); });
   document.querySelector('[data-clear]')?.addEventListener('click', function () {
     if (state.submittedAt) return;
     document.querySelectorAll('input[type="radio"]').forEach(function (input) { input.checked = false; });
+    document.querySelectorAll('textarea').forEach(function (field) { field.value = ''; });
     state.responses = {};
-    saveLocal('Choices cleared.', '');
+    state.notes = {};
+    saveLocal('Choices and working notes cleared.', '');
   });
 
   questions.forEach(function (question) {
@@ -41,17 +55,22 @@
   });
 
   document.getElementById('submit-homework').addEventListener('click', submitHomework);
+  if (!state.submittedAt) document.getElementById('submit-homework').textContent = submitButtonLabel;
   if (state.submittedAt) pollForResult(0);
   if (!token()) setStatus('Ready when you are.', '');
 
   function freshState() {
-    return { assignmentId: assignmentId, assignmentLabel: assignmentLabel, saveId: createId(), studentName: 'Ethan', startedAt: new Date().toISOString(), submittedAt: null, responses: {}, result: null };
+    return { assignmentId: assignmentId, assignmentLabel: assignmentLabel, saveId: createId(), studentName: 'Ethan', startedAt: new Date().toISOString(), submittedAt: null, responses: {}, notes: {}, result: null };
   }
 
   function loadState() {
     try {
       var saved = JSON.parse(localStorage.getItem(storageKey));
-      return saved && saved.saveId && saved.responses ? saved : freshState();
+      if (!saved || !saved.saveId || !saved.responses) return freshState();
+      saved.assignmentId = assignmentId;
+      saved.assignmentLabel = assignmentLabel;
+      saved.notes = saved.notes || {};
+      return saved;
     } catch (error) { return freshState(); }
   }
 
@@ -76,7 +95,7 @@
 
   function submitHomework() {
     if (state.submittedAt) return;
-    var missing = 30 - Object.keys(state.responses).length;
+    var missing = questionCount - Object.keys(state.responses).length;
     if (missing && !window.confirm('There are still ' + missing + ' unanswered questions.\n\nSubmit anyway? Blank answers will be counted as incorrect.')) return;
     var enteredName = window.prompt('Please type your name before submitting:', state.studentName || 'Ethan');
     if (enteredName === null || !enteredName.trim()) { setStatus('Submission cancelled. Type your name when ready.', 'error'); return; }

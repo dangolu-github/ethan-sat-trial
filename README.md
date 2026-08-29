@@ -10,9 +10,10 @@ Student-facing GitHub Pages portal for Ethan's SAT Reading and Writing course.
 - `/mock-exams/` — legacy redirect to Mock 1
 - `/skill-boosters/` — Vocabulary Lab, Reading Lab, and four-domain Intensive Skill Booster
 - `/mistake-log/` — server-backed Mistake Logbook with checked mistakes and retry states
-- `/2026-08-29/` — completed Class 01 entry for Central Ideas and Details plus Annotated SAT-Style Sentences; Mock 1 remains the only Week 1 self-learning task
+- `/2026-08-29/` — completed Class 01 entry for Central Ideas and Details, Annotated SAT-Style Sentences, and the assigned 30-question class homework
 - `/2026-08-29/handout-1-central-ideas-and-details/` — access-controlled, content-free learner shell for the Central Ideas and Details handout
 - `/2026-08-29/handout-2-sat-sentence-demonstrations/` — access-controlled, content-free learner shell for the Annotated SAT-Style Sentences handout
+- `/2026-08-29/homework-central-ideas-nonfinite/` — assigned 30-question Class 01 homework with draft saving and a deliberate submit button
 - `/2026-08-10/` — completed Class 00 entry, linking the preserved learner handout and homework
 - `/hm1-sentence-boundaries/` — assigned HM1 learner practice with draft saving and a deliberate submit button
 
