@@ -10,7 +10,10 @@ Student-facing GitHub Pages portal for Ethan's SAT Reading and Writing course.
 - `/mock-exams/` — legacy redirect to Mock 1
 - `/skill-boosters/` — Vocabulary Lab, Reading Lab, and four-domain Intensive Skill Booster
 - `/mistake-log/` — server-backed Mistake Logbook with checked mistakes and retry states
-- `/2026-08-10/` — the only current Class Logbook entry, linking the preserved Class 00 learner handout and homework
+- `/2026-08-29/` — completed Class 01 entry for Central Ideas and Details plus Annotated SAT-Style Sentences; Mock 1 remains the only Week 1 self-learning task
+- `/2026-08-29/handout-1-central-ideas-and-details/` — access-controlled, content-free learner shell for the Central Ideas and Details handout
+- `/2026-08-29/handout-2-sat-sentence-demonstrations/` — access-controlled, content-free learner shell for the Annotated SAT-Style Sentences handout
+- `/2026-08-10/` — completed Class 00 entry, linking the preserved learner handout and homework
 - `/hm1-sentence-boundaries/` — assigned HM1 learner practice with draft saving and a deliberate submit button
 
 ## Access and privacy
@@ -19,4 +22,4 @@ The learner enters the course password once in a browser. A successful entry sto
 
 The Teacher Portal remains Google owner-only and never asks the teacher for Ethan's password. Its learner-preview links can trust the teacher's current browser without exposing the credential in the finished learner URL.
 
-The repository and static question assets remain public, so answer keys, teacher notes, source maps, internal question IDs, learner responses, scores, and private records stay outside this repository. All learner routes use `noindex` metadata. Homework and mock pages preserve drafts and require a visible learner-controlled submit action. Checked answers remain off until released from the authenticated Teacher Portal.
+The repository and static question assets remain public, so answer keys, teacher notes, source maps, internal question IDs, learner responses, scores, and private records stay outside this repository. Class 01 handout routes contain only secure launch shells; the full learner handouts and paired Teacher versions stay in the authenticated service. All learner routes use `noindex` metadata. Homework and mock pages preserve drafts and require a visible learner-controlled submit action. Handout access and learner-safe answer annotations are separate Teacher Portal controls.
