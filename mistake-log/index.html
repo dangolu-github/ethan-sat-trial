@@ -1,25 +1,113 @@
 <!doctype html>
 <html lang="en" class="access-pending">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
   <title>Mistake Logbook · Ethan SAT</title>
-  <link rel="stylesheet" href="../assets/hub.css"><link rel="stylesheet" href="../assets/gate.css">
-  <style>
-    .summary-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:28px}.summary-card{padding:22px;border:1px solid var(--line-dark);border-radius:14px;background:var(--surface)}.summary-card span{display:block;color:var(--soft);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.summary-card strong{display:block;margin-top:8px;font-size:30px}.log-status{margin-top:24px;padding:18px;border:1px solid var(--line-dark);border-radius:12px;background:rgba(255,255,255,.55);color:var(--muted);line-height:1.6}.mistake-list{display:grid;gap:14px;margin-top:18px}.mistake-card{padding:22px;border:1px solid var(--line-dark);border-radius:14px;background:var(--surface)}.mistake-top{display:flex;justify-content:space-between;gap:16px}.mistake-top h3{margin:0;font-size:18px}.mistake-top span{color:var(--violet);font-size:12px;font-weight:850}.answer-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.answer-box{padding:13px;border-radius:10px;background:var(--paper);color:var(--muted);font-size:13px}.answer-box strong{display:block;margin-bottom:4px;color:var(--ink)}.question-link{display:inline-block;margin-top:15px;color:var(--accent);font-size:12px;font-weight:850;text-decoration:none}@media(max-width:620px){.summary-grid,.answer-pair{grid-template-columns:1fr}}
-  </style>
-  <script src="../assets/config.js"></script><script src="../assets/gate.js?v=20260828c" defer></script>
+  <link rel="stylesheet" href="../assets/mistake-logbook.css?v=20260830-ethan-parity">
+  <link rel="stylesheet" href="../assets/gate.css">
+  <script src="../assets/config.js"></script>
+  <script src="../assets/gate.js?v=20260830-ethan-parity" defer></script>
 </head>
-<body><div class="workspace-shell">
-  <aside class="workspace-sidebar">
-    <a class="workspace-brand" href="../"><span class="brand-mark">E</span><span>Ethan SAT</span></a>
-    <div class="sidebar-section"><p class="sidebar-label">Mistake Logbook</p><a class="sidebar-home" href="#summary">Summary</a><a class="sidebar-home" href="#retry-queue">Retry queue</a></div>
-    <nav class="date-tree" aria-label="Course navigation"><a class="tree-link" href="../skill-boosters/"><span class="tree-date">Practice</span><span class="tree-title">Skill Booster</span></a><a class="tree-link" href="../mock-1/"><span class="tree-date">Mock 1</span><span class="tree-title">Reading and Writing</span></a></nav>
-    <p class="sidebar-note">Questions you have reviewed will appear here for another try.</p>
-  </aside>
-  <main class="workspace-main" tabindex="-1">
-    <a class="back-link" href="../"><span aria-hidden="true">←</span> Course home</a>
-    <header class="page-header" style="margin-top:34px"><div><p class="eyebrow">Review · Retry · Recover</p><h1>Mistake Logbook</h1><p class="page-intro">Return to difficult questions, compare your first choice with the correction, and try again.</p></div><span class="workspace-status"><i></i> Review practice</span></header>
-    <section id="summary" class="summary-grid" aria-label="Mistake summary"><div class="summary-card"><span>Checked mistakes</span><strong id="past-count">0</strong></div><div class="summary-card"><span>Needs review</span><strong id="review-count">0</strong></div><div class="summary-card"><span>Recovered</span><strong id="recovered-count">0</strong></div></section>
-    <section class="month-section" id="retry-queue"><div class="section-heading"><h2>Retry queue</h2><span id="queue-count">Loading…</span></div><div class="log-status" id="log-status" aria-live="polite">Loading your review list…</div><div class="mistake-list" id="mistake-list"></div></section>
+<body>
+  <nav class="logbook-bar">
+    <a class="logbook-brand" href="../">← Ethan SAT workspace</a>
+    <div class="logbook-actions">
+      <button class="quiet-button" id="print-button" type="button">Save as PDF</button>
+      <span>Learner self-practice</span>
+    </div>
+  </nav>
+
+  <main class="logbook-page">
+    <header class="logbook-hero">
+      <div>
+        <p class="eyebrow">Review · Retry · Recover</p>
+        <h1>Mistake Logbook</h1>
+        <p class="hero-copy">Every checked wrong or blank answer from homework, weekly checks, and Intensive Skill Booster practice is registered here and placed in its SAT domain and question type.</p>
+      </div>
+      <aside class="hero-note">
+        <strong>One correct redo means “Recovered once.”</strong>
+        Your original homework result stays in the history. You can remove a question from this logbook when it is no longer useful to review.
+      </aside>
+    </header>
+
+    <nav class="round-switcher" role="tablist" aria-label="Mistake Logbook round">
+      <button id="round-1-tab" class="round-tab is-active" type="button" role="tab" aria-selected="true" data-round="round1">
+        <span>Stage 1</span><strong>Question-Type Foundations</strong><small><b id="round-1-count">0</b> mistakes</small>
+      </button>
+      <button id="round-2-tab" class="round-tab" type="button" role="tab" aria-selected="false" data-round="round2">
+        <span>Stage 2</span><strong>Systematic Review</strong><small><b id="round-2-count">0</b> mistakes</small>
+      </button>
+    </nav>
+
+    <section class="summary-grid" aria-label="Mistake summary">
+      <article><span>Past mistakes</span><strong id="summary-total">—</strong></article>
+      <article><span>Needs review</span><strong id="summary-needs">—</strong></article>
+      <article><span>Recovered once</span><strong id="summary-recovered">—</strong></article>
+    </section>
+
+    <section class="filter-panel" aria-labelledby="filter-title">
+      <div class="section-heading">
+        <div><p class="eyebrow">Find a pattern</p><h2 id="filter-title">Filter your logbook</h2></div>
+        <button class="text-button" id="clear-filters" type="button">Clear filters</button>
+      </div>
+      <div class="filter-grid">
+        <label>Practice source<select id="filter-source"><option value="">All sources</option></select></label>
+        <label>SAT domain<select id="filter-domain"><option value="">All domains</option></select></label>
+        <label>Question type<select id="filter-skill"><option value="">All question types</option></select></label>
+        <label>Topic or theme<select id="filter-theme"><option value="">All topics and themes</option></select></label>
+        <label>Recovery status
+          <select id="filter-status">
+            <option value="">All statuses</option>
+            <option value="needs-review" selected>Needs review</option>
+            <option value="recovered-once">Recovered once</option>
+          </select>
+        </label>
+      </div>
+      <div class="practice-actions">
+        <button class="primary-button" id="practice-mixed" type="button">Practice a mix from this round</button>
+        <button class="secondary-button" id="practice-filtered" type="button">Practice this filtered set</button>
+      </div>
+    </section>
+
+    <section class="logbook-section show-mistakes" id="logbook-section" aria-labelledby="logbook-title">
+      <div class="section-heading">
+        <h2 id="logbook-title">Stage 1 mistake questions</h2>
+        <div class="review-heading-tools">
+          <div class="review-controls" role="group" aria-label="Review display">
+            <label><input id="show-answers" type="checkbox"> Show answers</label>
+            <label><input id="show-mistakes" type="checkbox" checked> Show mistakes</label>
+          </div>
+          <span id="result-count" class="result-count">Loading…</span>
+        </div>
+      </div>
+      <div id="logbook-status" class="status-message" role="status">Loading your submitted mistakes…</div>
+      <div id="mistake-list" class="mistake-list"></div>
+      <nav class="pager" aria-label="Mistake pages">
+        <button id="previous-page" type="button">← Previous</button>
+        <span id="page-label">Page 1 of 1</span>
+        <button id="next-page" type="button">Next →</button>
+      </nav>
+    </section>
+
+    <section class="practice-section" id="practice-section" hidden aria-labelledby="practice-title">
+      <div class="practice-heading">
+        <div><p class="eyebrow" id="practice-kicker">Self-check practice</p><h2 id="practice-title">Redo session</h2><p id="practice-intro"></p></div>
+        <button class="quiet-button" id="close-practice" type="button">Close practice</button>
+      </div>
+      <div id="practice-status" class="status-message" role="status"></div>
+      <form id="practice-form">
+        <div id="practice-questions" class="practice-questions"></div>
+        <div class="submit-panel">
+          <div><strong id="practice-progress">0 of 0 answered</strong><p>Blank answers are allowed after confirmation and count as incorrect.</p></div>
+          <button class="primary-button" id="submit-practice" type="submit">Submit and check</button>
+        </div>
+      </form>
+      <div id="practice-result" class="practice-result" hidden></div>
+    </section>
   </main>
-</div><script src="../assets/mistake-log.js?v=20260828b" defer></script></body></html>
+
+  <script src="../assets/mistake-log.js?v=20260830-ethan-parity" defer></script>
+</body>
+</html>

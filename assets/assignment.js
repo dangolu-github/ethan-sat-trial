@@ -214,7 +214,7 @@
     button.textContent = 'Preparing submission…';
     jsonp('getAssignmentState', { assignmentId: config.assignmentId, environment: state.environment, saveId: state.submissionId })
       .then(function (data) {
-        if (data && (!data.receiving || data.archived)) {
+        if (data && !data.receiving) {
           button.textContent = 'Receiving stopped';
           setStatus('This practice is currently closed. Your answers are still here.', 'error');
           return;
