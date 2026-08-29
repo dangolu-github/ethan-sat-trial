@@ -527,7 +527,7 @@
   function pollForResult(attempt) {
     clearTimeout(resultPollTimer);
     if (!config.submissionEndpoint || !state.submissionId) return;
-    jsonp('getGradedResult', { submissionId: state.submissionId, assignmentId: assignmentId }, function (data) {
+    jsonp('getGradedResult', { submissionId: state.submissionId, saveId: state.submissionId, assignmentId: assignmentId }, function (data) {
       if (data && data.ok && (data.found || data.pending === false)) {
         submitted = true;
         state.submittedAt = data.submittedAt || state.submittedAt || new Date().toISOString();
