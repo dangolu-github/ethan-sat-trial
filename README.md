@@ -4,9 +4,9 @@ Student-facing GitHub Pages portal for Ethan's SAT Reading and Writing course.
 
 ## Routes
 
-- `/` — learner workspace with Class Logbook, Weekly Self-Learning Check, Skill Booster, and Mistake Logbook
+- `/` — learner workspace with Class Logbook, required homework, suggested practice, Skill Booster, and Mistake Logbook
 - `/course-plan/` — separate flexible 20-week course plan; it does not pre-create future class entries
-- `/mock-1/` — assigned Week 1 Reading and Writing mock with 54 questions and deliberate submission
+- `/mock-1/` — optional suggested Mock 1 (August 22 Test Set) with 54 Reading and Writing questions and deliberate submission
 - `/mock-exams/` — legacy redirect to Mock 1
 - `/skill-boosters/` — Vocabulary Lab, Reading Lab, and four-domain Intensive Skill Booster
 - `/mistake-log/` — server-backed Mistake Logbook with checked mistakes and retry states
