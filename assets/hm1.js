@@ -7,6 +7,19 @@
   var submitButtonLabel = homeworkConfig.submitButtonLabel || 'Submit HM1';
   var endpoint = (window.ETHAN_PORTAL_CONFIG || {}).submissionEndpoint || '';
   var storageKey = homeworkConfig.storageKey || 'ethan-hm1-boundaries-first-attempt';
+  var query = new URLSearchParams(window.location.search || '');
+  var teacherTest = query.get('test') === '1';
+  var teacherAnswerToken = teacherTest ? (query.get('teacherAnswerToken') || '') : '';
+  if (teacherTest) {
+    storageKey += ':teacher-test:' + (query.get('testRunId') || teacherAnswerToken || 'invalid');
+    if (!/^[a-f0-9]{32}$/.test(teacherAnswerToken)) {
+      document.getElementById('submit-homework').disabled = true;
+      document.getElementById('save-status').textContent = 'Open a fresh teacher test from the Teacher Portal.';
+      return;
+    }
+    submitButtonLabel = 'Submit teacher test';
+    document.querySelector('h1').textContent += ' — Teacher test';
+  }
   var saveTimer = null;
   var submitting = false;
   var progressQueue = Promise.resolve();
@@ -68,7 +81,7 @@
   if (!token()) setStatus('Ready when you are.', '');
 
   function freshState() {
-    return { assignmentId: assignmentId, assignmentLabel: assignmentLabel, saveId: createId(), studentName: 'Ethan', startedAt: new Date().toISOString(), submittedAt: null, responses: {}, notes: {}, result: null };
+    return { assignmentId: assignmentId, assignmentLabel: assignmentLabel, saveId: createId(), studentName: teacherTest ? 'Teacher test' : 'Ethan', startedAt: new Date().toISOString(), submittedAt: null, responses: {}, notes: {}, result: null };
   }
 
   function loadState() {
@@ -133,7 +146,7 @@
     try {
       return await fetch(endpoint, {
         method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, signal: controller.signal,
-        body: JSON.stringify({ action: submitted ? 'submitHomework' : 'saveProgress', accessToken: token(), assignmentId: assignmentId, assignmentLabel: assignmentLabel, saveId: state.saveId, responses: responses || state.responses, studentName: state.studentName, submittedAt: submitted ? state.submittedAt : null })
+        body: JSON.stringify({ action: submitted ? 'submitHomework' : 'saveProgress', accessToken: token(), environment: teacherTest ? 'test' : 'production', teacherAnswerToken: teacherAnswerToken, assignmentId: assignmentId, assignmentLabel: assignmentLabel, saveId: state.saveId, responses: responses || state.responses, studentName: state.studentName, submittedAt: submitted ? state.submittedAt : null })
       });
     } finally { window.clearTimeout(timeout); }
   }
@@ -146,7 +159,7 @@
     if (state.submittedAt || submitting || state.result) return;
     var missing = questionCount - Object.keys(state.responses).length;
     if (missing && !window.confirm('There are still ' + missing + ' unanswered questions.\n\nSubmit anyway? Blank answers will be counted as incorrect.')) return;
-    var enteredName = window.prompt('Please type your name before submitting:', state.studentName || 'Ethan');
+    var enteredName = teacherTest ? 'Teacher test' : window.prompt('Please type your name before submitting:', state.studentName || 'Ethan');
     if (enteredName === null || !enteredName.trim()) { setStatus('Submission cancelled. Type your name when ready.', 'error'); return; }
     state.studentName = enteredName.trim().slice(0, 80);
     submitting = true;
@@ -223,7 +236,7 @@
   }
 
   function jsonp(action, parameters) {
-    return window.EthanPortalAccess.request(action, parameters);
+    return window.EthanPortalAccess.request(action, Object.assign({}, parameters, { environment: teacherTest ? 'test' : 'production', teacherAnswerToken: teacherAnswerToken }));
   }
 
   function setStatus(message, type) {
