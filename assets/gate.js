@@ -3,13 +3,17 @@
   const trustedBrowserKey = 'ethan-sat-trusted-browser-v1';
   const deviceTokenKey = 'ethan-sat-device-token-v1';
   const tokenKey = 'ethan-sat-access-token';
+  const expiryKey = 'ethan-sat-access-expires-at';
   const expectedHash = '7b8bd6c0abf53d22888beafc48830e1156907dd4ec7e6ea31e55a0dd6dc5a969';
   const portalConfig = window.ETHAN_PORTAL_CONFIG || {};
   let resolveReady;
+  let renewal = null;
   const ready = new Promise((resolve) => { resolveReady = resolve; });
 
   window.EthanPortalAccess = {
     ready,
+    ensureFreshAccess: (force) => ensureFreshAccess(force),
+    request: (action, parameters) => authenticatedRequest(action, parameters),
     getToken: () => {
       try { return window.sessionStorage.getItem(tokenKey) || ''; }
       catch { return ''; }
@@ -26,16 +30,12 @@
     catch { return false; }
   };
 
-  const getAccess = () => (
-    readStorage(window.localStorage, trustedBrowserKey) === 'granted' ||
-    readStorage(window.sessionStorage, sessionAccessKey) === 'granted'
-  );
-
   const getDeviceToken = () => readStorage(window.localStorage, deviceTokenKey);
 
-  const setAccess = (token, deviceToken) => {
+  const setAccess = (token, deviceToken, expiresIn) => {
     writeStorage(window.sessionStorage, sessionAccessKey, 'granted');
     if (token) writeStorage(window.sessionStorage, tokenKey, token);
+    if (token) writeStorage(window.sessionStorage, expiryKey, String(Date.now() + Number(expiresIn || 21600) * 1000));
     writeStorage(window.localStorage, trustedBrowserKey, 'granted');
     if (deviceToken) writeStorage(window.localStorage, deviceTokenKey, deviceToken);
   };
@@ -57,7 +57,7 @@
     return Array.from(new Uint8Array(hash), (byte) => byte.toString(16).padStart(2, '0')).join('');
   };
 
-  const requestAccess = (action, parameters) => new Promise((resolve, reject) => {
+  const requestData = (action, parameters) => new Promise((resolve, reject) => {
     if (!portalConfig.submissionEndpoint) {
       reject(new Error('Access is unavailable.'));
       return;
@@ -75,8 +75,7 @@
     };
     window[callbackName] = (data) => {
       cleanup();
-      if (data && data.ok && data.accessToken) resolve(data);
-      else reject(new Error((data && data.error) || 'Access could not be confirmed.'));
+      resolve(data);
     };
     script.onerror = () => {
       cleanup();
@@ -87,8 +86,47 @@
     document.head.appendChild(script);
   });
 
+  const requestAccess = async (action, parameters) => {
+    const data = await requestData(action, parameters);
+    if (!data || !data.ok || !data.accessToken) throw new Error((data && data.error) || 'Access could not be confirmed.');
+    return data;
+  };
+
   const authorize = (code) => requestAccess('authorizeAccess', { code });
   const renewAccess = (deviceToken) => requestAccess('renewAccess', { deviceToken });
+
+  async function ensureFreshAccess(force) {
+    if (renewal) return renewal;
+    const token = window.EthanPortalAccess.getToken();
+    const expiresAt = Number(readStorage(window.sessionStorage, expiryKey));
+    if (!force && token && expiresAt > Date.now() + 60000) return token;
+    const device = getDeviceToken();
+    if (!device) {
+      showGate();
+      throw new Error('Please enter your course password again. Your answers are still saved on this browser.');
+    }
+    renewal = renewAccess(device).then((access) => {
+      setAccess(access.accessToken, device, access.expiresIn);
+      reveal();
+      resolveReady();
+      return access.accessToken;
+    }).catch(() => {
+      showGate();
+      throw new Error('We could not reconnect. Check your connection and enter your course password again. Your answers are still saved on this browser.');
+    }).finally(() => { renewal = null; });
+    return renewal;
+  }
+
+  async function authenticatedRequest(action, parameters) {
+    let token = await ensureFreshAccess(false);
+    let data = await requestData(action, Object.assign({}, parameters, { accessToken: token }));
+    if (data && !data.ok && /course access expired/i.test(data.error || '')) {
+      token = await ensureFreshAccess(true);
+      data = await requestData(action, Object.assign({}, parameters, { accessToken: token }));
+    }
+    if (!data || !data.ok) throw new Error((data && data.error) || 'The request could not be confirmed. Please try again.');
+    return data;
+  }
 
   const reveal = () => {
     document.body.dataset.access = 'granted';
@@ -99,6 +137,7 @@
   };
 
   const showGate = () => {
+    if (document.querySelector('.access-gate')) return;
     document.body.dataset.access = 'locked';
     document.body.classList.add('access-locked');
     Array.from(document.body.children).forEach((node) => { node.inert = true; });
@@ -146,9 +185,12 @@
       }
       try {
         const access = await authorize(code);
-        setAccess(access.accessToken, access.deviceToken);
+        setAccess(access.accessToken, access.deviceToken, access.expiresIn);
       } catch (accessError) {
-        setAccess('', '');
+        error.textContent = 'We could not connect to your course. Your saved answers are safe. Check your connection and try again.';
+        button.disabled = false;
+        button.textContent = 'Try again';
+        return;
       }
       reveal();
       resolveReady();
@@ -159,21 +201,12 @@
   const trustedDevice = consumeTrustedDevice() || getDeviceToken();
   if (trustedDevice) {
     renewAccess(trustedDevice).then((access) => {
-      setAccess(access.accessToken, trustedDevice);
+      setAccess(access.accessToken, trustedDevice, access.expiresIn);
       reveal();
       resolveReady();
     }).catch(() => {
-      if (getAccess()) {
-        reveal();
-        resolveReady();
-      } else showGate();
+      showGate();
     });
-    return;
-  }
-
-  if (getAccess()) {
-    reveal();
-    resolveReady();
     return;
   }
 
