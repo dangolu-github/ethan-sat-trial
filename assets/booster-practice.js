@@ -71,7 +71,7 @@
     if (!submitted) {
       var button = document.getElementById('portal-submit');
       button.disabled = false;
-      button.textContent = 'Submit homework';
+      button.textContent = 'Submit practice';
     }
     checkResetState();
     if (submitted) pollForResult(0);
@@ -245,7 +245,7 @@
     zone.innerHTML =
       '<div id="portal-result" hidden></div>' +
       '<div id="portal-submit-copy"><h2>Ready to submit?</h2><p>You may submit with blank answers, but every unanswered question will be counted as incorrect.</p></div>' +
-      '<div class="portal-submit-row"><span class="portal-unanswered" id="portal-unanswered"></span><button class="portal-submit" id="portal-submit" type="button">Submit homework</button></div>';
+      '<div class="portal-submit-row"><span class="portal-unanswered" id="portal-unanswered"></span><button class="portal-submit" id="portal-submit" type="button">Submit practice</button></div>';
     document.body.appendChild(zone);
 
     var difficulty = document.createElement('section');
@@ -445,7 +445,7 @@
         return;
       }
       button.disabled = false;
-      button.textContent = 'Submit homework';
+      button.textContent = 'Submit practice';
       submitHomeworkNow();
     }, function () {
       button.disabled = false;
@@ -493,7 +493,7 @@
 
     var button = document.getElementById('portal-submit');
     button.disabled = true;
-    button.textContent = 'Sending homework…';
+    button.textContent = 'Sending practice…';
     var submittedAt = new Date().toISOString();
     state.environment = testMode ? 'test' : 'production';
     try {
@@ -509,7 +509,7 @@
       button.disabled = false;
       button.textContent = 'Try sending again';
       saveState();
-      showMessage('The homework could not be sent. Your answers are still safely saved on this device.');
+      showMessage('The practice could not be sent. Your answers are still safely saved on this device.');
     }
   }
 
@@ -578,7 +578,7 @@
     button.disabled = false;
     button.textContent = 'Try sending again';
     saveState();
-    showMessage('No submitted result was confirmed. Your work is still saved; try again or ask the Teacher whether receiving has been stopped for this homework.');
+    showMessage('No submitted result was confirmed. Your work is still saved; try again or ask the Teacher whether receiving has been stopped for this practice.');
   }
 
   function pollForProgressReview(attempt) {
