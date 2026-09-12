@@ -4,6 +4,7 @@ Student-facing GitHub Pages portal for Ethan's SAT Reading and Writing course.
 
 ## Routes
 
+- `/2026-09-12/` — Class 02 summary and feedback, What Is This Text Doing? handout, 20-question targeted review, 15-question Text Structure and Purpose homework, independent agreement practice, and optional Vocabulary Unit 1 practice
 - `/` — learner workspace with Class Logbook, required homework, suggested practice, Skill Booster, and Mistake Logbook
 - `/course-plan/` — separate flexible 20-week course plan; it does not pre-create future class entries
 - `/mock-1/` — optional suggested Mock 1 (August 22 Test Set) with 54 Reading and Writing questions and deliberate submission
