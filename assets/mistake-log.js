@@ -456,6 +456,7 @@
 
   function loadSourceQuestion(item) {
     var path = item.sourcePath;
+    if (item.supplement && item.supplement.stem) return Promise.resolve(supplementSourceQuestion(item.supplement));
     if (/^mock-1\/?$/.test(path)) return Promise.resolve(mockSourceQuestion(item));
     if (/homework-central-ideas-nonfinite\/?$/.test(path)) return class01SourceQuestion(item);
     if (!state.sourceCache[path]) {
@@ -496,6 +497,31 @@
       });
       return { content: clone, choices: choices.length ? choices : ['A.', 'B.', 'C.', 'D.'] };
     });
+  }
+
+  function supplementMarkup(text) {
+    return String(text).replace(/[&<>"']/g, function (character) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character];
+    }).replace(/«u»/g, '<u>').replace(/«\/u»/g, '</u>');
+  }
+
+  function supplementSourceQuestion(supplement) {
+    var article = document.createElement('article');
+    article.className = 'source-question supplement-source-question';
+    var passage = document.createElement('div');
+    passage.className = 'passage';
+    String(supplement.passage || '').split(/\n\s*\n/).forEach(function (part) {
+      if (!part.trim()) return;
+      var paragraph = document.createElement('p');
+      paragraph.innerHTML = supplementMarkup(part.trim());
+      passage.appendChild(paragraph);
+    });
+    var stem = document.createElement('p');
+    stem.className = 'logbook-question-prompt';
+    stem.innerHTML = supplementMarkup(String(supplement.stem || ''));
+    article.append(passage, stem);
+    var choices = (supplement.options || []).slice(0, 4).map(function (text, index) { return String.fromCharCode(65 + index) + '. ' + text; });
+    return { content: article, choices: choices.length === 4 ? choices : ['A.', 'B.', 'C.', 'D.'] };
   }
 
   function mockSourceQuestion(item) {

@@ -186,3 +186,10 @@ body.portal-archived .choice { cursor: default; }
   .mistake-explanation { break-inside: avoid; }
   .teacher-answer-summary { break-inside: avoid; margin: 24px auto 0; }
 }
+
+/* Extra practice questions are served as text after course access */
+.booster-text-question{margin:0 0 14px;font-size:16px;line-height:1.6}
+.booster-text-question p{margin:0 0 10px}
+.booster-text-question .stem{font-weight:700}
+.booster-text-choices .choice-text{margin-left:10px}
+.booster-supplement-notice{margin:18px 0 0;padding:14px 16px;border:1px solid #d8c9a0;border-radius:10px;background:#fbf6e8;color:#6b5418;font-weight:600}

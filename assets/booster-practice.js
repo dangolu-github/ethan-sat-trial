@@ -17,34 +17,93 @@
   var progressReviewMode = Boolean(progressSaveId);
   var teacherReviewMode = submittedReviewMode || progressReviewMode;
   var storageKey = 'ethan-booster:' + assignmentId + (testMode ? ':teacher-test' : '');
-  var questions = Array.from(document.querySelectorAll('.question'));
-  var state = teacherReviewMode ? freshState() : loadState();
+  var questions = [];
+  var state = null;
   var saveTimer = null;
   var flagTimer = null;
   var progressSyncTimer = null;
   var progressPollTimer = null;
   var resultPollTimer = null;
-  var submitted = teacherReviewMode || Boolean(state.submittedAt);
+  var submitted = false;
   var archiveMode = false;
   var assignmentStateReady = teacherReviewMode || testMode || !config.submissionEndpoint;
   var normalStartupDone = false;
   var assignmentStateTimer = null;
+  var supplementExpected = Number(config.supplementCount || 0);
+  var supplementMissing = false;
 
-  if (submittedReviewMode) state.submissionId = reviewSubmissionId;
-  if (progressReviewMode) state.submissionId = progressSaveId;
+  // Extra questions for this set are served privately after course access is confirmed.
+  // Pages without extra questions start synchronously, exactly as before.
+  if (supplementExpected && config.submissionEndpoint) loadSupplementQuestions().then(boot, boot);
+  else boot();
 
-  if (!questions.length) return;
+  function boot() {
+    questions = Array.from(document.querySelectorAll('.question'));
+    state = teacherReviewMode ? freshState() : loadState();
+    submitted = teacherReviewMode || Boolean(state.submittedAt);
+    if (submittedReviewMode) state.submissionId = reviewSubmissionId;
+    if (progressReviewMode) state.submissionId = progressSaveId;
 
-  installHeader();
-  enhanceQuestions();
-  installSubmitZone();
-  restoreState();
-  updateProgress();
-  document.body.classList.add('portal-ready');
-  portalReady.then(startBackendFlow);
-  window.addEventListener('online', function () {
-    if (!teacherReviewMode && !submitted && !archiveMode && hasProgress()) scheduleProgressSync(true);
-  });
+    if (!questions.length) return;
+
+    installHeader();
+    enhanceQuestions();
+    installSubmitZone();
+    restoreState();
+    updateProgress();
+    document.body.classList.add('portal-ready');
+    if (supplementMissing) showSupplementNotice();
+    portalReady.then(startBackendFlow);
+    window.addEventListener('online', function () {
+      if (!teacherReviewMode && !submitted && !archiveMode && hasProgress()) scheduleProgressSync(true);
+    });
+  }
+
+  function loadSupplementQuestions() {
+    if (!supplementExpected || !config.submissionEndpoint) return Promise.resolve();
+    return portalReady.then(function () {
+      return new Promise(function (resolve, reject) {
+        jsonp('getBoosterSupplement', { assignmentId: assignmentId }, resolve, reject);
+      });
+    }).then(function (data) {
+      var items = data && data.ok && Array.isArray(data.items) ? data.items : [];
+      if (items.length !== supplementExpected) throw new Error('Supplement count mismatch');
+      var list = document.querySelector('.booster-question-list');
+      items.forEach(function (item) { list.insertAdjacentHTML('beforeend', supplementCard(item)); });
+    }).catch(function () {
+      supplementMissing = true;
+    });
+  }
+
+  function markup(text) {
+    return escapeHtml(text).replace(/«u»/g, '<u>').replace(/«\/u»/g, '</u>');
+  }
+
+  function supplementCard(item) {
+    var options = (item.options || []).slice(0, 4);
+    while (options.length < 4) options.push('');
+    return '<article class="question booster-inline-card supplement-question" id="q-' + Number(item.number) + '">' +
+      '<div class="qhead"><h2>Question ' + Number(item.number) + '</h2></div>' +
+      '<div class="booster-text-question">' + paragraphs(item.passage) + '<p class="stem">' + markup(item.stem || '') + '</p></div>' +
+      '<p class="answer-prompt">Choose your answer.</p>' +
+      '<ol class="choices booster-letter-choices booster-text-choices">' +
+      options.map(function (text, index) { return '<li class="choice"><strong>' + String.fromCharCode(65 + index) + '</strong><span class="choice-text">' + escapeHtml(text) + '</span></li>'; }).join('') +
+      '</ol></article>';
+  }
+
+  function paragraphs(text) {
+    return String(text || '').split(/\n\s*\n/).filter(function (part) { return part.trim(); }).map(function (part) {
+      return '<p>' + markup(part.trim()).replace(/\n/g, '<br>') + '</p>';
+    }).join('');
+  }
+
+  function showSupplementNotice() {
+    var list = document.querySelector('.booster-question-list');
+    var note = document.createElement('p');
+    note.className = 'booster-supplement-notice';
+    note.textContent = supplementExpected + ' more question' + (supplementExpected === 1 ? '' : 's') + ' in this set could not be loaded. Reload the page before you submit so the whole set is checked.';
+    list.appendChild(note);
+  }
 
   function startBackendFlow() {
     installTeacherAnswerSummary();
