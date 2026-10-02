@@ -18,7 +18,7 @@
     bindEvents();
     applyReviewVisibility();
     if (!window.EthanPortalAccess || !window.EthanPortalAccess.ready) {
-      showLogbookStatus('Portal access could not be initialized.', true);
+      showLogbookStatus('This page could not be opened. Please reload.', true);
       return;
     }
     window.EthanPortalAccess.ready.then(function () {
@@ -90,7 +90,7 @@
   }
 
   function loadLogbook() {
-    showLogbookStatus('Loading your submitted mistakes…', false);
+    showLogbookStatus('Loading your mistakes…', false);
     elements['mistake-list'].replaceChildren();
     request('getMistakeLogbook', Object.assign({ page: state.page, environment: environment() }, currentFilters()), function (data) {
       if (!data || !data.ok) {
@@ -110,7 +110,7 @@
       renderMistakes(data.items || [], (data.page - 1) * data.pageSize);
       renderPager(data);
     }, function () {
-      showLogbookStatus('The Mistake Logbook connection is unavailable. Please try again.', true);
+      showLogbookStatus('The Mistake Logbook could not be opened. Please try again.', true);
     });
   }
 
@@ -318,7 +318,7 @@
       if (attempt >= 20) {
         button.disabled = false;
         button.textContent = 'Remove from logbook';
-        showLogbookStatus('The removal status is temporarily unavailable.', true);
+        showLogbookStatus('Please reload to check.', true);
         return;
       }
       window.setTimeout(function () { pollDismissal(dismissalId, item, card, button, attempt + 1); }, 1000);
@@ -392,7 +392,7 @@
       renderPractice();
     }, function () {
       setPracticeButtonsDisabled(false);
-      showLogbookStatus('The practice builder is unavailable. Please try again.', true);
+      showLogbookStatus('The practice set could not be made. Please try again.', true);
     });
   }
 
@@ -461,7 +461,7 @@
     if (/homework-central-ideas-nonfinite\/?$/.test(path)) return class01SourceQuestion(item);
     if (!state.sourceCache[path]) {
       state.sourceCache[path] = window.fetch(publicPathUrl(path), { credentials: 'same-origin' }).then(function (response) {
-        if (!response.ok) throw new Error('Question source unavailable.');
+        if (!response.ok) throw new Error('This question could not be shown.');
         return response.text();
       }).then(function (html) {
         return new DOMParser().parseFromString(html, 'text/html');
@@ -553,11 +553,11 @@
     if (!state.sourceCache[cacheKey]) {
       state.sourceCache[cacheKey] = window.fetch(publicPathUrl(path), { credentials: 'same-origin' })
         .then(function (response) {
-          if (!response.ok) throw new Error('Question source unavailable.');
+          if (!response.ok) throw new Error('This question could not be shown.');
           return response.text();
         }).then(function (html) {
           var match = html.match(/const cid=(\[[\s\S]*?\]);\s*const nfm=(\[[\s\S]*?\]);\s*const letters=/);
-          if (!match) throw new Error('Question source unavailable.');
+          if (!match) throw new Error('This question could not be shown.');
           return Function('"use strict";return (' + match[1] + ').concat(' + match[2] + ');')();
         });
     }
@@ -630,7 +630,7 @@
     elements['submit-practice'].textContent = 'Checking…';
     elements['practice-status'].hidden = false;
     elements['practice-status'].className = 'status-message';
-    elements['practice-status'].textContent = 'Submitting your redo for automatic checking…';
+    elements['practice-status'].textContent = 'Checking your answers…';
     var payload = {
       action: 'submitMistakePractice',
       accessToken: state.token,
@@ -666,7 +666,7 @@
         state.currentPractice.submitted = false;
         elements['submit-practice'].disabled = false;
         elements['submit-practice'].textContent = 'Submit and check';
-        showPracticeStatus('The submission was sent, but the checked result is taking longer than expected. Try again in a moment.', true);
+        showPracticeStatus('Your answers were sent. The result is taking longer than usual. Please try again in a moment.', true);
         return;
       }
       window.setTimeout(function () { pollPracticeResult(attempt + 1); }, 1000);
@@ -675,7 +675,7 @@
         state.currentPractice.submitted = false;
         elements['submit-practice'].disabled = false;
         elements['submit-practice'].textContent = 'Submit and check';
-        showPracticeStatus('The checked result is temporarily unavailable.', true);
+        showPracticeStatus('The result is not available right now.', true);
         return;
       }
       window.setTimeout(function () { pollPracticeResult(attempt + 1); }, 1000);
@@ -715,7 +715,7 @@
     var heading = document.createElement('h3');
     heading.textContent = result.score + ' / ' + result.total + ' correct';
     var copy = document.createElement('p');
-    copy.textContent = 'Correct redos are now marked Recovered once. Wrong or blank redos remain Needs review. Your original mistake history is unchanged.';
+    copy.textContent = 'Questions you got right are now marked Recovered once. The others stay in Needs review.';
     elements['practice-result'].append(heading, copy);
     loadLogbook();
     elements['practice-result'].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -748,7 +748,7 @@
 
   function request(action, parameters, success, failure) {
     if (!ENDPOINT) {
-      failure(new Error('Portal endpoint unavailable.'));
+      failure(new Error('Not available right now.'));
       return;
     }
     var callbackName = '__ethanMistakeLogbook' + Date.now() + Math.random().toString(16).slice(2);

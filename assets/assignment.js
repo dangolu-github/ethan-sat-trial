@@ -215,7 +215,7 @@
     jsonp('getAssignmentState', { assignmentId: config.assignmentId, environment: state.environment, saveId: state.submissionId })
       .then(function (data) {
         if (data && !data.receiving) {
-          button.textContent = 'Receiving stopped';
+          button.textContent = 'Closed';
           setStatus('This practice is currently closed. Your answers are still here.', 'error');
           return;
         }
@@ -367,9 +367,9 @@
     }).then(function (data) {
       if (!data || !data.ok || !Array.isArray(data.answers) || data.answers.length !== config.count) throw new Error('Answer key unavailable');
       data.answers.forEach(function (answer, index) { renderReviewAnswer(index + 1, String(answer || '')); });
-      setReviewStatus('Verified answers are shown below.', 'success');
+      setReviewStatus('The correct answers are shown below.', 'success');
     }).catch(function () {
-      setReviewStatus('Answers could not be loaded. Please refresh and try again.', 'error');
+      setReviewStatus('Your answers could not be opened. Please reload and try again.', 'error');
     });
   }
 
@@ -429,7 +429,7 @@
 
   function jsonp(action, parameters) {
     return portalReady.then(function () { return new Promise(function (resolve, reject) {
-      if (!portalConfig.submissionEndpoint) { reject(new Error('Submission endpoint unavailable')); return; }
+      if (!portalConfig.submissionEndpoint) { reject(new Error('This work cannot be submitted right now.')); return; }
       var args = Object.assign({}, parameters, { accessToken: portalAccessToken() });
       var callbackName = '__ethanAssignment' + Date.now() + Math.random().toString(16).slice(2);
       var script = document.createElement('script');

@@ -193,3 +193,12 @@ body.portal-archived .choice { cursor: default; }
 .booster-text-question .stem{font-weight:700}
 .booster-text-choices .choice-text{margin-left:10px}
 .booster-supplement-notice{margin:18px 0 0;padding:14px 16px;border:1px solid #d8c9a0;border-radius:10px;background:#fbf6e8;color:#6b5418;font-weight:600}
+
+/* Class-homework choice lists (2026-10-02): choices of a few words (longest up to 20 characters) sit in one row,
+   on screen and in print; longer choices stay one per line. */
+body.portal-ready .options.choices-words { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+body.portal-ready .options.choices-words .choice { grid-template-columns: 24px minmax(0, 1fr); margin: 0; }
+body.portal-ready .options.choices-words .answer-label { grid-column: 1 / -1; justify-self: start; }
+@media screen and (max-width: 600px) {
+  body.portal-ready .options.choices-words { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

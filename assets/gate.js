@@ -103,7 +103,7 @@
     const device = getDeviceToken();
     if (!device) {
       showGate();
-      throw new Error('Please enter your course password again. Your answers are still saved on this browser.');
+      throw new Error('Please enter your course password again. Your answers are still here.');
     }
     renewal = renewAccess(device).then((access) => {
       setAccess(access.accessToken, device, access.expiresIn);
@@ -112,7 +112,7 @@
       return access.accessToken;
     }).catch(() => {
       showGate();
-      throw new Error('We could not reconnect. Check your connection and enter your course password again. Your answers are still saved on this browser.');
+      throw new Error('We could not reconnect. Check your connection and enter your course password again. Your answers are still here.');
     }).finally(() => { renewal = null; });
     return renewal;
   }

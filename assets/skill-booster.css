@@ -207,3 +207,48 @@ body.portal-ready .booster-inline-card .choice-body {
     margin-bottom: 8px !important;
   }
 }
+
+/* Answer-choice layout by length (2026-10-02) */
+/* The same rule applies on screen and in print. Letters and choices of a few words (longest up to 20 characters) stay four across; the mark sits under the choice so it never squeezes the text. */
+body.portal-ready .booster-inline-card .choices:not(.choices-stacked) .choice {
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-content: start;
+}
+
+body.portal-ready .booster-inline-card .choices:not(.choices-stacked) .answer-label {
+  grid-column: 1 / -1;
+  justify-self: center;
+  margin-top: 6px;
+}
+
+/* Sentence-length choices read one per line; the mark sits at the end of the line. */
+body.portal-ready .booster-inline-card .choices.choices-stacked {
+  grid-template-columns: 1fr !important;
+  gap: 10px !important;
+}
+
+body.portal-ready .booster-inline-card .choices-stacked .choice {
+  justify-content: stretch;
+  min-height: 0;
+  padding: 13px 15px !important;
+}
+
+body.portal-ready .booster-inline-card .choices-stacked .choice-body {
+  justify-self: start;
+}
+
+@media screen and (max-width: 600px) {
+  body.portal-ready .booster-inline-card .choices.choices-words {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  body.portal-ready .booster-inline-card .choices-stacked .choice {
+    grid-template-columns: 24px minmax(0, 1fr);
+  }
+
+  body.portal-ready .booster-inline-card .choices-stacked .answer-label {
+    grid-column: 2;
+    justify-self: start;
+    margin-top: 6px;
+  }
+}

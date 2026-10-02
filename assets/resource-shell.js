@@ -53,21 +53,21 @@
       if (!window.EthanPortalAccess || !window.EthanPortalAccess.ready) throw new Error('Course access is unavailable.');
       await window.EthanPortalAccess.ready;
       const accessToken = window.EthanPortalAccess.getToken();
-      if (!accessToken) throw new Error('Course access needs to be refreshed.');
+      if (!accessToken) throw new Error('Please enter your course password again.');
 
       const data = await getResourceState(accessToken);
       if (!data.accessMode) {
-        showState('locked', 'This handout is not currently available. Your other course pages are unchanged.');
+        showState('locked', 'This handout is not available right now.');
         return;
       }
-      if (!data.contentUrl) throw new Error('The handout route is unavailable.');
+      if (!data.contentUrl) throw new Error('This handout could not be opened.');
 
       const target = new URL(data.contentUrl);
-      if (target.protocol !== 'https:' || target.hostname !== 'script.google.com') throw new Error('The handout route is invalid.');
+      if (target.protocol !== 'https:' || target.hostname !== 'script.google.com') throw new Error('This handout could not be opened.');
       target.searchParams.set('accessToken', accessToken);
       window.location.replace(target.toString());
     } catch (error) {
-      showState('error', 'We couldn’t open this handout right now. Return to the class page and try again later. No learning content has been loaded.');
+      showState('error', 'We couldn’t open this handout right now. Please go back to the class page and try again later.');
     }
   };
 

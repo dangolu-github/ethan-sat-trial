@@ -44,7 +44,7 @@
     field.addEventListener('input', function () {
       if (state.submittedAt || submitting) return;
       state.notes[field.id] = field.value;
-      saveLocal('Working notes saved on this browser.', 'success');
+      saveLocal('Notes saved.', 'success');
     });
   });
 
@@ -113,10 +113,10 @@
       var snapshot = Object.assign({}, state.responses);
       await sendProgress(false, snapshot);
       var saved = await jsonp('getHomeworkProgress', { assignmentId: assignmentId, saveId: state.saveId });
-      if (saved.pending || !sameAnswers(saved.responses, snapshot)) throw new Error('Your answers are saved on this browser, but we could not confirm the copy with your teacher. Please try again.');
-      if (!submitting && !state.submittedAt && sameAnswers(state.responses, snapshot)) setStatus('Saved on this browser and with your teacher.', 'success');
+      if (saved.pending || !sameAnswers(saved.responses, snapshot)) throw new Error('Your answers are saved, but they could not be sent yet. Please try again.');
+      if (!submitting && !state.submittedAt && sameAnswers(state.responses, snapshot)) setStatus('Saved.', 'success');
     }).catch(function (error) {
-      if (!submitting && !state.submittedAt) setStatus(error.message || 'Saved on this browser. We could not connect to your teacher.', 'error');
+      if (!submitting && !state.submittedAt) setStatus(error.message || 'Saved · not sent yet.', 'error');
     });
   }
 
@@ -135,11 +135,11 @@
 
   async function checkReceiving() {
     var data = await jsonp('getAssignmentState', { assignmentId: assignmentId, saveId: state.saveId });
-    if (!data.receiving) throw new Error('Your teacher has paused submissions for this homework. Your answers are still saved.');
+    if (!data.receiving) throw new Error('This homework is closed for now. Your answers are still here.');
   }
 
   async function sendProgress(submitted, responses) {
-    if (!endpoint) throw new Error('Submission service unavailable.');
+    if (!endpoint) throw new Error('Not available right now.');
     await window.EthanPortalAccess.ensureFreshAccess(false);
     var controller = new AbortController();
     var timeout = window.setTimeout(function () { controller.abort(); }, 20000);
@@ -169,7 +169,7 @@
     button.disabled = true;
     button.textContent = 'Connecting…';
     try {
-      saveLocal('Checking your connection. Your answers are saved on this browser.', '');
+      saveLocal('Sending… Your answers are saved.', '');
       await progressQueue;
       await window.EthanPortalAccess.ensureFreshAccess(true);
       var receipt = await jsonp('getGradedResult', { assignmentId: assignmentId, saveId: state.saveId });
