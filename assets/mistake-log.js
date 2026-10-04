@@ -520,6 +520,12 @@
     stem.className = 'logbook-question-prompt';
     stem.innerHTML = supplementMarkup(String(supplement.stem || ''));
     article.append(passage, stem);
+    if (supplement.figure) {
+      var figure = document.createElement('div');
+      figure.className = 'booster-figure';
+      figure.innerHTML = String(supplement.figure);
+      article.insertBefore(figure, passage);
+    }
     var choices = (supplement.options || []).slice(0, 4).map(function (text, index) { return String.fromCharCode(65 + index) + '. ' + text; });
     return { content: article, choices: choices.length === 4 ? choices : ['A.', 'B.', 'C.', 'D.'] };
   }

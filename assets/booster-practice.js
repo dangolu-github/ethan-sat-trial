@@ -44,7 +44,10 @@
     if (submittedReviewMode) state.submissionId = reviewSubmissionId;
     if (progressReviewMode) state.submissionId = progressSaveId;
 
-    if (!questions.length) return;
+    if (!questions.length) {
+      if (supplementMissing) showSupplementNotice();
+      return;
+    }
 
     installHeader();
     enhanceQuestions();
@@ -63,7 +66,10 @@
     if (!supplementExpected || !config.submissionEndpoint) return Promise.resolve();
     return portalReady.then(function () {
       return new Promise(function (resolve, reject) {
-        jsonp('getBoosterSupplement', { assignmentId: assignmentId }, resolve, reject);
+        // One retry: a set whose questions are all served privately has nothing to show without them.
+        jsonp('getBoosterSupplement', { assignmentId: assignmentId }, resolve, function () {
+          jsonp('getBoosterSupplement', { assignmentId: assignmentId }, resolve, reject, 20000);
+        }, 20000);
       });
     }).then(function (data) {
       var items = data && data.ok && Array.isArray(data.items) ? data.items : [];
@@ -84,7 +90,7 @@
     while (options.length < 4) options.push('');
     return '<article class="question booster-inline-card supplement-question" id="q-' + Number(item.number) + '">' +
       '<div class="qhead"><h2>Question ' + Number(item.number) + '</h2></div>' +
-      '<div class="booster-text-question">' + paragraphs(item.passage) + '<p class="stem">' + markup(item.stem || '') + '</p></div>' +
+      '<div class="booster-text-question">' + (item.figure ? '<div class="booster-figure">' + item.figure + '</div>' : '') + paragraphs(item.passage) + '<p class="stem">' + markup(item.stem || '') + '</p></div>' +
       '<p class="answer-prompt">Choose your answer.</p>' +
       '<ol class="choices booster-letter-choices booster-text-choices">' +
       options.map(function (text, index) { return '<li class="choice"><strong>' + String.fromCharCode(65 + index) + '</strong><span class="choice-text">' + escapeHtml(text) + '</span></li>'; }).join('') +
@@ -101,7 +107,9 @@
     var list = document.querySelector('.booster-question-list');
     var note = document.createElement('p');
     note.className = 'booster-supplement-notice';
-    note.textContent = supplementExpected + ' more question' + (supplementExpected === 1 ? '' : 's') + ' did not open. Please reload before you submit.';
+    note.textContent = document.querySelector('.question')
+      ? supplementExpected + ' more question' + (supplementExpected === 1 ? '' : 's') + ' did not open. Please reload before you submit.'
+      : 'The questions did not open. Please reload this page.';
     list.appendChild(note);
   }
 
@@ -958,12 +966,12 @@
     });
   }
 
-  function jsonp(action, parameters, success, failure) {
+  function jsonp(action, parameters, success, failure, wait) {
     parameters.accessToken = portalAccessToken();
     parameters.teacherAnswerToken = teacherAnswerToken;
     var callbackName = '__ethanBooster' + Date.now() + Math.random().toString(16).slice(2);
     var script = document.createElement('script');
-    var timeout = setTimeout(function () { cleanup(); if (failure) failure(new Error('Timed out')); }, 9000);
+    var timeout = setTimeout(function () { cleanup(); if (failure) failure(new Error('Timed out')); }, wait || 9000);
     function cleanup() { clearTimeout(timeout); delete window[callbackName]; if (script.parentNode) script.parentNode.removeChild(script); }
     window[callbackName] = function (data) { cleanup(); success(data); };
     script.onerror = function () { cleanup(); if (failure) failure(new Error('Unable to load')); };

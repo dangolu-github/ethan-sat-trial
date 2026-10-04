@@ -202,3 +202,6 @@ body.portal-ready .options.choices-words .answer-label { grid-column: 1 / -1; ju
 @media screen and (max-width: 600px) {
   body.portal-ready .options.choices-words { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* Figures inside privately served questions (tables, graphs). */
+.booster-figure{margin:0 0 14px}.booster-figure .figure-title{font-weight:700;text-align:center;font-size:15px;margin:6px auto 8px;max-width:560px}.booster-figure .figure-note{font-size:14px;color:#4b655b;text-align:center;margin:6px 0}.booster-figure img,.booster-figure svg{display:block;width:100%;max-width:560px;height:auto;margin:0 auto}.booster-figure .table-wrap{overflow-x:auto}.booster-figure table{border-collapse:collapse;margin:0 auto;font-size:15px;width:auto}.booster-figure th,.booster-figure td{border:1px solid #cdd8d2;padding:7px 11px;text-align:left;vertical-align:top}.booster-figure th{background:#f0f5f1}
