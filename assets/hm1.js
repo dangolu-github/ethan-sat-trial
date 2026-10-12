@@ -26,6 +26,7 @@
   var ready = window.EthanPortalAccess && window.EthanPortalAccess.ready ? window.EthanPortalAccess.ready : Promise.resolve();
   var state = loadState();
   var questions = Array.from(document.querySelectorAll('[data-q]'));
+  if (!state.submittedAt && window.PortalSubmissionOrigin) window.PortalSubmissionOrigin.warm();
 
   questions.forEach(function (question) {
     var number = Number(question.dataset.q);
@@ -138,15 +139,26 @@
     if (!data.receiving) throw new Error('This homework is closed for now. Your answers are still here.');
   }
 
+  // Sent with the submission only (not with draft saves); a slow or failed lookup never blocks it.
+  function submissionOrigin() {
+    var origin = window.PortalSubmissionOrigin;
+    if (!origin) return Promise.resolve(undefined);
+    return Promise.race([
+      Promise.resolve().then(function () { return origin.collect(); }),
+      new Promise(function (resolve) { window.setTimeout(resolve, 5000); })
+    ]).catch(function () { return undefined; });
+  }
+
   async function sendProgress(submitted, responses) {
     if (!endpoint) throw new Error('Not available right now.');
+    var origin = submitted ? await submissionOrigin() : undefined;
     await window.EthanPortalAccess.ensureFreshAccess(false);
     var controller = new AbortController();
     var timeout = window.setTimeout(function () { controller.abort(); }, 20000);
     try {
       return await fetch(endpoint, {
         method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, signal: controller.signal,
-        body: JSON.stringify({ action: submitted ? 'submitHomework' : 'saveProgress', accessToken: token(), environment: teacherTest ? 'test' : 'production', teacherAnswerToken: teacherAnswerToken, assignmentId: assignmentId, assignmentLabel: assignmentLabel, saveId: state.saveId, responses: responses || state.responses, studentName: state.studentName, submittedAt: submitted ? state.submittedAt : null })
+        body: JSON.stringify({ action: submitted ? 'submitHomework' : 'saveProgress', accessToken: token(), environment: teacherTest ? 'test' : 'production', teacherAnswerToken: teacherAnswerToken, assignmentId: assignmentId, assignmentLabel: assignmentLabel, saveId: state.saveId, responses: responses || state.responses, studentName: state.studentName, submittedAt: submitted ? state.submittedAt : null, submissionOrigin: origin })
       });
     } finally { window.clearTimeout(timeout); }
   }

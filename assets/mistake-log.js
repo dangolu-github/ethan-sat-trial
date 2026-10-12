@@ -14,6 +14,7 @@
 
   var elements = {};
   onReady(function () {
+    if (window.PortalSubmissionOrigin) window.PortalSubmissionOrigin.warm();
     cacheElements();
     bindEvents();
     applyReviewVisibility();
@@ -646,11 +647,14 @@
       filters: practice.filters,
       items: answers
     };
-    window.fetch(ENDPOINT, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
+    submissionOrigin().then(function (origin) {
+      payload.submissionOrigin = origin;
+      return window.fetch(ENDPOINT, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
     }).then(function () {
       pollPracticeResult(0);
     }).catch(function () {
@@ -659,6 +663,16 @@
       elements['submit-practice'].textContent = 'Submit and check';
       showPracticeStatus('The redo could not be submitted. Please try again.', true);
     });
+  }
+
+  // Sent with the redo submission only; a slow or failed lookup never blocks it.
+  function submissionOrigin() {
+    var origin = window.PortalSubmissionOrigin;
+    if (!origin) return Promise.resolve(undefined);
+    return Promise.race([
+      Promise.resolve().then(function () { return origin.collect(); }),
+      new Promise(function (resolve) { window.setTimeout(resolve, 5000); })
+    ]).catch(function () { return undefined; });
   }
 
   function pollPracticeResult(attempt) {

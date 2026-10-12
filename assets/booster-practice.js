@@ -33,6 +33,17 @@
   var supplementMissing = false;
 
   // Extra questions for this set are served privately after course access is confirmed.
+  // Teacher-only submission origin, sent with the submission. Pages that do not load the origin script themselves get it here.
+  if (!teacherReviewMode) {
+    if (window.PortalSubmissionOrigin) window.PortalSubmissionOrigin.warm();
+    else if (document.currentScript && /booster-practice\.js/.test(document.currentScript.src)) {
+      var originScript = document.createElement('script');
+      originScript.src = document.currentScript.src.replace(/booster-practice\.js(\?[^#]*)?$/, 'submission-origin.js?v=20261012');
+      originScript.onload = function () { if (window.PortalSubmissionOrigin) window.PortalSubmissionOrigin.warm(); };
+      document.head.appendChild(originScript);
+    }
+  }
+
   // Pages without extra questions start synchronously, exactly as before.
   if (supplementExpected && config.submissionEndpoint) loadSupplementQuestions().then(boot, boot);
   else boot();
@@ -572,8 +583,9 @@
     var submittedAt = new Date().toISOString();
     state.environment = testMode ? 'test' : 'production';
     try {
+      var origin = await submissionOrigin();
       var response = await fetch(config.submissionEndpoint, {
-        method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(Object.assign({}, state, { action: 'submitHomework', accessToken: portalAccessToken(), teacherAnswerToken: teacherAnswerToken, saveId: state.submissionId, submittedAt: submittedAt }))
+        method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(Object.assign({}, state, { action: 'submitHomework', accessToken: portalAccessToken(), teacherAnswerToken: teacherAnswerToken, saveId: state.submissionId, submittedAt: submittedAt, submissionOrigin: origin }))
       });
       if (response.type !== 'opaque' && !response.ok) throw new Error('Submission failed');
       submitted = true;
@@ -586,6 +598,16 @@
       saveState();
       showMessage('This could not be sent. Your answers are still here. Please try again.');
     }
+  }
+
+  // Sent with the submission only (not with draft saves); a slow or failed lookup never blocks it.
+  function submissionOrigin() {
+    var origin = window.PortalSubmissionOrigin;
+    if (!origin) return Promise.resolve(undefined);
+    return Promise.race([
+      Promise.resolve().then(function () { return origin.collect(); }),
+      new Promise(function (resolve) { setTimeout(resolve, 5000); })
+    ]).catch(function () { return undefined; });
   }
 
   function lockSubmittedPage() {

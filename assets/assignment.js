@@ -16,6 +16,7 @@
 
   if (isReview) loadReviewAnswersWhenReady();
   else {
+    if (!state.result && window.PortalSubmissionOrigin) window.PortalSubmissionOrigin.warm();
     restorePracticeState();
     bindPractice();
     updateProgress();
@@ -261,9 +262,10 @@
     var submittedAt = new Date().toISOString();
     try {
       await portalReady;
+      var origin = await submissionOrigin();
       await fetch(portalConfig.submissionEndpoint, {
         method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(Object.assign({}, state, { action: 'submitHomework', accessToken: portalAccessToken(), saveId: state.submissionId, submittedAt: submittedAt }))
+        body: JSON.stringify(Object.assign({}, state, { action: 'submitHomework', accessToken: portalAccessToken(), saveId: state.submissionId, submittedAt: submittedAt, submissionOrigin: origin }))
       });
       state.submittedAt = submittedAt;
       saveLocal('Submitting…', '');
@@ -275,6 +277,16 @@
       button.disabled = false;
       button.textContent = 'Try submitting again';
     }
+  }
+
+  // Sent with the submission only (not with draft saves); a slow or failed lookup never blocks it.
+  function submissionOrigin() {
+    var origin = window.PortalSubmissionOrigin;
+    if (!origin) return Promise.resolve(undefined);
+    return Promise.race([
+      Promise.resolve().then(function () { return origin.collect(); }),
+      new Promise(function (resolve) { setTimeout(resolve, 5000); })
+    ]).catch(function () { return undefined; });
   }
 
   function pollForResult(attempt) {
