@@ -81,6 +81,8 @@
     elements['practice-questions'].addEventListener('change', updatePracticeProgress);
     elements['close-practice'].addEventListener('click', closePractice);
     elements['print-button'].addEventListener('click', function () { window.print(); });
+    window.addEventListener('beforeprint', fitPrintLines);
+    window.addEventListener('afterprint', restorePrintLines);
     elements['show-answers'].addEventListener('change', applyReviewVisibility);
     elements['show-mistakes'].addEventListener('change', applyReviewVisibility);
     ['round-1-tab', 'round-2-tab'].forEach(function (id) {
@@ -506,13 +508,68 @@
     }).replace(/«u»/g, '<u>').replace(/«\/u»/g, '</u>');
   }
 
+  // A poem keeps its lines (2026-10-24: one source line per printed line). Each line is its own block;
+  // an underline that runs over a line end is closed and reopened so every line stays well formed.
+  function verseBlock(part) {
+    var block = document.createElement('div');
+    block.className = 'booster-verse';
+    block.setAttribute('data-print-lines', '');
+    var open = false;
+    part.split('\n').forEach(function (line) {
+      var text = (open ? '«u»' : '') + line.trim();
+      open = (text.match(/«u»/g) || []).length > (text.match(/«\/u»/g) || []).length;
+      var row = document.createElement('div');
+      row.innerHTML = supplementMarkup(text + (open ? '«/u»' : ''));
+      block.appendChild(row);
+    });
+    return block;
+  }
+
+  // Before printing, record each poem's widest line in em; the print CSS then shrinks that poem (never below 7pt)
+  // so that no line wraps. Measured near the printed size because system fonts change spacing with size.
+  function fitPrintLines() {
+    document.querySelectorAll('[data-print-lines]').forEach(function (block) {
+      var lines = Array.from(block.children);
+      if (!lines.length) return;
+      block.classList.add('print-lines-measure');
+      var widestAt = function (px) {
+        block.style.setProperty('--print-measure-size', px + 'px');
+        return Math.max.apply(null, lines.map(function (line) {
+          var range = document.createRange();
+          range.selectNodeContents(line);
+          return range.getBoundingClientRect().width / px;
+        }));
+      };
+      var widest = widestAt(12);
+      if (widest > 0) widest = Math.max(widest, widestAt(Math.min(13.6, 640 / widest)));   // about 650px of card text on A4
+      block.classList.remove('print-lines-measure');
+      block.style.removeProperty('--print-measure-size');
+      if (widest > 0 && widest <= 72) {   // above 72em even 7pt would not fit: such a poem keeps wrapping
+        block.style.setProperty('--print-line-em', widest.toFixed(2));
+        block.classList.add('print-lines-fit');
+      }
+    });
+  }
+
+  function restorePrintLines() {
+    document.querySelectorAll('.print-lines-fit').forEach(function (block) {
+      block.classList.remove('print-lines-fit');
+      block.style.removeProperty('--print-line-em');
+    });
+  }
+
   function supplementSourceQuestion(supplement) {
     var article = document.createElement('article');
     article.className = 'source-question supplement-source-question';
     var passage = document.createElement('div');
     passage.className = 'passage';
-    String(supplement.passage || '').split(/\n\s*\n/).forEach(function (part) {
-      if (!part.trim()) return;
+    var parts = String(supplement.passage || '').split(/\n\s*\n/).filter(function (part) { return part.trim(); });
+    var poem = parts.length > 1 && /^The following text is (adapted )?from\b[^\n]*\bpoem\b/i.test(parts[0]);
+    parts.forEach(function (part, index) {
+      if (poem && index > 0 && /\n/.test(part.trim())) {
+        passage.appendChild(verseBlock(part.trim()));
+        return;
+      }
       var paragraph = document.createElement('p');
       paragraph.innerHTML = supplementMarkup(part.trim());
       passage.appendChild(paragraph);

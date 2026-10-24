@@ -137,6 +137,16 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .source-question > .qhead { display: none; }
 .source-question .passage, .source-question .qtext, .source-question .stem { font-family: Georgia, "Times New Roman", serif; line-height: 1.68; }
 .source-question .logbook-question-prompt { font-weight: 850; }
+/* A poem keeps its lines: one block per line. In print the poem shrinks to its widest line (measured by
+   mistake-log.js before printing) so that no line wraps; never below 7pt (2026-10-24). */
+.source-question .booster-verse { margin: 1em 0; }
+.print-lines-measure > * { white-space: nowrap !important; font-size: var(--print-measure-size, 12px) !important; }
+@media print {
+  @supports (font-size: 1cqi) {
+    .print-lines-fit { container-type: inline-size; }
+    .print-lines-fit > * { white-space: nowrap !important; font-size: max(7pt, min(1em, calc(98cqi / var(--print-line-em)))) !important; }
+  }
+}
 .source-question img { max-width: 100%; height: auto; }
 .mock-source-prompt { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
 .mock-source-prompt img { width: 100%; border: 1px solid var(--line); border-radius: 8px; background: white; }
