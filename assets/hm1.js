@@ -9,10 +9,11 @@
   var storageKey = homeworkConfig.storageKey || 'ethan-hm1-boundaries-first-attempt';
   var query = new URLSearchParams(window.location.search || '');
   var teacherTest = query.get('test') === '1';
-  var teacherAnswerToken = teacherTest ? (query.get('teacherAnswerToken') || '') : '';
+  // Teacher test links carry the token in the fragment; the access script keeps it for this tab (2026-11-11).
+  var teacherAnswerToken = teacherTest ? (query.get('teacherAnswerToken') || (window.EthanPortalAccess && window.EthanPortalAccess.teacherTestToken ? window.EthanPortalAccess.teacherTestToken() : '') || '') : '';
   if (teacherTest) {
     storageKey += ':teacher-test:' + (query.get('testRunId') || teacherAnswerToken || 'invalid');
-    if (!/^[a-f0-9]{32}$/.test(teacherAnswerToken)) {
+    if (!/^[a-f0-9]{32}([a-f0-9]{32})?$/.test(teacherAnswerToken)) {
       document.getElementById('submit-homework').disabled = true;
       document.getElementById('save-status').textContent = 'Open a fresh teacher test from the Teacher Portal.';
       return;
@@ -233,7 +234,7 @@
           if (value === selected && value !== result.correctAnswers[index]) label.classList.add('is-wrong');
         });
       });
-    } else receipt.innerHTML = '<strong>Submitted.</strong><br>Your answers have been saved. Feedback will appear here when it is ready.';
+    } else receipt.innerHTML = '<strong>Submitted.</strong> Waiting for your teacher to review.<br>Your answers have been saved. Your score will appear here after the review.';
   }
 
   function submissionUnconfirmed(error) {

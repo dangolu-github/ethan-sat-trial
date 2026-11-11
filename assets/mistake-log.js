@@ -25,7 +25,7 @@
     window.EthanPortalAccess.ready.then(function () {
       state.token = window.EthanPortalAccess.getToken ? window.EthanPortalAccess.getToken() : '';
       if (!state.token) {
-        showLogbookStatus('Course access expired. Return to the course home and enter the password again.', true);
+        showLogbookStatus('We couldn’t open your Mistake Logbook just now. Please reload the page.', true);
         return;
       }
       loadLogbook();
@@ -823,7 +823,7 @@
     };
   }
 
-  function request(action, parameters, success, failure) {
+  function request(action, parameters, success, failure, renewed) {
     if (!ENDPOINT) {
       failure(new Error('Not available right now.'));
       return;
@@ -836,7 +836,18 @@
       delete window[callbackName];
       if (script.parentNode) script.parentNode.removeChild(script);
     }
-    window[callbackName] = function (data) { cleanup(); success(data); };
+    window[callbackName] = function (data) {
+      cleanup();
+      // An expired short token is renewed from this browser's remembered credential, then the request runs once more.
+      if (!renewed && data && data.ok === false && /course access expired/i.test(data.error || '') && window.EthanPortalAccess && window.EthanPortalAccess.ensureFreshAccess) {
+        window.EthanPortalAccess.ensureFreshAccess(true).then(function (token) {
+          state.token = token;
+          request(action, parameters, success, failure, true);
+        }, function () { success(data); });
+        return;
+      }
+      success(data);
+    };
     script.onerror = function () { cleanup(); failure(); };
     var query = Object.keys(parameters || {}).filter(function (key) {
       return parameters[key] !== '' && parameters[key] !== null && parameters[key] !== undefined;

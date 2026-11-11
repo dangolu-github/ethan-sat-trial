@@ -332,7 +332,7 @@
     box.hidden = false;
     if (result.checkMode) {
       box.innerHTML = '<strong>' + escapeHtml(result.score) + ' / ' + escapeHtml(result.total) + '</strong><span>' + escapeHtml(result.percent) + '% correct</span><p>Correct answers are highlighted in green. Your incorrect selections are marked in red.</p>';
-    } else box.innerHTML = '<strong>Submitted</strong><span>Your answers have been saved.</span><p>Feedback will appear here when it is ready.</p>';
+    } else box.innerHTML = '<strong>Submitted</strong><span>Waiting for your teacher to review.</span><p>Your answers have been saved. Your score will appear here after the review.</p>';
     setStatus(result.checkMode ? 'Feedback ready.' : 'Submitted successfully.', 'success');
     updateProgress();
     if (shouldFocus) {
