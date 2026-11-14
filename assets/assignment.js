@@ -3,7 +3,7 @@
 
   var config = window.ETHAN_ASSIGNMENT_CONFIG || {};
   var portalConfig = window.ETHAN_PORTAL_CONFIG || {};
-  var imageVersion = '?v=20260828d';
+  var defaultImageVersion = '?v=20260828d';
   var testMode = new URLSearchParams(window.location.search).get('test') === '1';
   var isReview = config.mode === 'review';
   var state = isReview ? null : loadState();
@@ -49,6 +49,8 @@
 
   function questionMarkup(number, localNumber, moduleLabel) {
     var folder = config.imageBase + '/q' + String(number).padStart(2, '0');
+    // A question whose images were replaced carries its own cache tag (Mock 1 Q38, 2026-11-14).
+    var imageVersion = config.imageVersions && config.imageVersions[number] ? '?v=' + config.imageVersions[number] : defaultImageVersion;
     var prompt = (config.promptLayout === 'split' || config.key === 'rw')
       ? '<div class="prompt-grid rw-prompt"><a class="prompt-zoom" href="' + folder + '/prompt-left.webp' + imageVersion + '" target="_blank" rel="noopener" aria-label="Open passage full size"><img class="prompt-image" src="' + folder + '/prompt-left.webp' + imageVersion + '" alt="' + escapeHtml(moduleLabel + ' question ' + localNumber + ' passage') + '" loading="lazy"></a><a class="prompt-zoom" href="' + folder + '/prompt-right.webp' + imageVersion + '" target="_blank" rel="noopener" aria-label="Open question stem full size"><img class="prompt-image" src="' + folder + '/prompt-right.webp' + imageVersion + '" alt="' + escapeHtml(moduleLabel + ' question ' + localNumber + ' stem') + '" loading="lazy"></a></div>'
       : '<div class="prompt-grid single"><a class="prompt-zoom" href="' + folder + '/prompt.webp' + imageVersion + '" target="_blank" rel="noopener" aria-label="Open question prompt full size"><img class="prompt-image" src="' + folder + '/prompt.webp' + imageVersion + '" alt="' + escapeHtml(moduleLabel + ' question ' + localNumber + ' prompt') + '" loading="lazy"></a></div>';
@@ -67,7 +69,7 @@
           '<input id="' + inputId + '" type="radio" name="answer-' + number + '" value="' + answer + '" data-answer-input data-number="' + number + '"' + (isReview ? ' disabled' : '') + '>' +
           '<span class="visually-hidden">Select option ' + answer + '</span>' +
           '<span class="option-letter" aria-hidden="true">' + answer + '.</span>' +
-          '<img class="option-image" src="' + folder + '/option-' + answer + '.webp' + imageVersion + '" alt="Option ' + answer + ' from the source question" loading="lazy">' +
+          '<img class="option-image" src="' + folder + '/option-' + answer + '.webp' + defaultImageVersion + '" alt="Option ' + answer + ' from the source question" loading="lazy">' +
         '</label>';
       }).join('') + '</div>';
   }
