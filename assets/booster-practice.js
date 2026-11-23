@@ -87,7 +87,10 @@
       var items = data && data.ok && Array.isArray(data.items) ? data.items : [];
       if (items.length !== supplementExpected) throw new Error('Supplement count mismatch');
       var list = document.querySelector('.booster-question-list');
-      items.forEach(function (item) { list.insertAdjacentHTML('beforeend', supplementCard(item)); });
+      items.forEach(function (item) {
+        if (item.part) list.insertAdjacentHTML('beforeend', '<h2 class="booster-part-heading" id="part-' + Number(item.number) + '">' + escapeHtml(item.part) + '</h2>');
+        list.insertAdjacentHTML('beforeend', supplementCard(item));
+      });
     }).catch(function () {
       supplementMissing = true;
     });
