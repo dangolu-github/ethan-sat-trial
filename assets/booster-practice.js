@@ -70,6 +70,7 @@
     restoreState();
     updateProgress();
     document.body.classList.add('portal-ready');
+    watchChoiceColumns();
     if (supplementMissing) showSupplementNotice();
     portalReady.then(startBackendFlow);
     window.addEventListener('online', function () {
@@ -381,6 +382,65 @@
           field.addEventListener('input', function () { captureQuestion(questionNumber); });
         });
       }
+    });
+  }
+
+  // A row of short choices never splits a word (2026-11-25). Each question starts from the stylesheet's own row;
+  // if a word is cut in two, or sticks out of its cell, the choices go to two columns, then to one per line.
+  // Measured again when the width of the page column or the fonts change. Print keeps the one row.
+  var choiceColumnsTimer = null;
+
+  function watchChoiceColumns() {
+    if (!document.querySelector('.options.choices-words')) return;
+    function refit() {
+      clearTimeout(choiceColumnsTimer);
+      choiceColumnsTimer = setTimeout(fitChoiceColumns, 120);
+    }
+    fitChoiceColumns();
+    window.addEventListener('resize', refit);
+    if (typeof ResizeObserver === 'function') {
+      // Also when the page column changes width without a window resize. Width only: moving choices between
+      // columns changes the height of the page, never its width.
+      var lastWidth = -1;
+      new ResizeObserver(function (entries) {
+        var width = Math.round(entries[0].contentRect.width);
+        if (width === lastWidth) return;
+        lastWidth = width;
+        refit();
+      }).observe(document.querySelector('main') || document.body);
+    }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitChoiceColumns);
+  }
+
+  function fitChoiceColumns() {
+    Array.from(document.querySelectorAll('.options.choices-words')).forEach(function (list) {
+      list.classList.remove('choices-cols-2', 'choices-cols-1');
+      if (!hasSplitWord(list)) return;
+      list.classList.add('choices-cols-2');
+      if (!hasSplitWord(list)) return;
+      list.classList.remove('choices-cols-2');
+      list.classList.add('choices-cols-1');
+    });
+  }
+
+  function hasSplitWord(list) {
+    return Array.from(list.querySelectorAll('.choice-text, .option-text')).some(function (text) {
+      if (text.scrollWidth > text.clientWidth + 1) return true;
+      var walker = document.createTreeWalker(text, NodeFilter.SHOW_TEXT);
+      var node;
+      while ((node = walker.nextNode())) {
+        // A word may still break after a hyphen, a dash or a slash.
+        var word = /[^\s\-‐-―\/]+/g;
+        var match;
+        while ((match = word.exec(node.nodeValue))) {
+          var range = document.createRange();
+          range.setStart(node, match.index);
+          range.setEnd(node, match.index + match[0].length);
+          var rects = range.getClientRects();
+          if (rects.length > 1 && Math.abs(rects[rects.length - 1].top - rects[0].top) > 2) return true;
+        }
+      }
+      return false;
     });
   }
 
