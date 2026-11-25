@@ -80,6 +80,14 @@ body.portal-ready .choice:has(input:focus-visible) { outline: 3px solid var(--po
 .wrong-label { background: var(--portal-wrong); }
 .question-result-label { display: inline-flex; margin: 0 0 14px; padding: 6px 9px; border-radius: 7px; color: var(--portal-wrong); background: var(--portal-wrong-bg); font-size: 12px; font-weight: 850; }
 
+/* One question checked at a time, before the set is submitted (2026-11-25) */
+.question-check { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 14px; }
+.question-check-button { min-height: 40px; padding: 0 15px; color: var(--portal-accent-dark); border: 1px solid #e4b7a8; border-radius: 8px; background: white; font: inherit; font-size: 13px; font-weight: 800; cursor: pointer; }
+.question-check-button:hover { border-color: var(--portal-accent); background: #fff4ef; }
+.question-check-button:focus-visible { outline: 3px solid var(--portal-ink); outline-offset: 2px; }
+.question-check-button:disabled { cursor: default; opacity: .6; }
+.question-check-status { color: var(--portal-muted); font-size: 13px; font-weight: 700; }
+
 .mistake-explanation { margin-top: 20px; border: 1px solid #d8c8a5; border-radius: 11px; background: #fffaf0; overflow: hidden; }
 .mistake-explanation summary { padding: 14px 16px; color: #765317; cursor: pointer; font-size: 13px; font-weight: 850; }
 .mistake-explanation summary:hover { background: #fff4da; }
@@ -181,7 +189,7 @@ body.portal-archived .choice { cursor: default; }
 }
 
 @media print {
-  .portal-bar, .portal-submit-zone, .portal-message, .difficulty-panel { display: none !important; }
+  .portal-bar, .portal-submit-zone, .portal-message, .difficulty-panel, .question-check { display: none !important; }
   body.portal-ready { padding-top: 0; }
   .mistake-explanation { break-inside: avoid; }
   .teacher-answer-summary { break-inside: avoid; margin: 24px auto 0; }

@@ -32,6 +32,9 @@
   var assignmentStateTimer = null;
   var supplementExpected = Number(config.supplementCount || 0);
   var supplementMissing = false;
+  // Questions checked one at a time before the set is submitted (2026-11-25): number -> { selected, correctAnswer, correct }.
+  var checkedQuestions = {};
+  var questionCheckOpen = false;
 
   // Extra questions for this set are served privately after course access is confirmed.
   // Teacher-only submission origin, sent with the submission. Pages that do not load the origin script themselves get it here.
@@ -183,7 +186,7 @@
   function startBackendFlow() {
     installTeacherAnswerSummary();
     if (submittedReviewMode) pollForResult(0);
-    else if (progressReviewMode) pollForProgressReview(0);
+    else if (progressReviewMode) { pollForProgressReview(0); loadQuestionChecks(); }
     else if (assignmentStateReady) startNormalPage();
     else {
       setAssignmentCheckingState();
@@ -209,7 +212,10 @@
     }
     checkResetState();
     if (submitted) pollForResult(0);
-    else if (hasProgress()) scheduleProgressSync(true);
+    else {
+      if (hasProgress()) scheduleProgressSync(true);
+      loadQuestionChecks();
+    }
   }
 
   function loadAssignmentState(initial) {
@@ -258,6 +264,7 @@
   function lockArchivedPage() {
     archiveMode = true;
     assignmentStateReady = true;
+    removeQuestionCheckControls();
     document.body.classList.add('portal-archived');
     questions.forEach(function (question) {
       Array.from(question.querySelectorAll('input, textarea')).forEach(function (field) { field.disabled = true; });
@@ -344,7 +351,7 @@
           captureQuestion(questionNumber);
         });
         choice.addEventListener('click', function (event) {
-          if (submitted || archiveMode || event.target.tagName === 'INPUT') return;
+          if (submitted || archiveMode || checkedQuestions[questionNumber] || event.target.tagName === 'INPUT') return;
           input.checked = true;
           input.dispatchEvent(new Event('change', { bubbles: true }));
         });
@@ -450,13 +457,152 @@
     var question = questions[number - 1];
     var selected = question.querySelector('input[type="radio"]:checked');
     var response = state.responses[number] || {};
-    response.answer = selected ? selected.value : '';
+    // A question that was checked on its own keeps the answer that was checked.
+    response.answer = checkedQuestions[number] ? checkedQuestions[number].selected : (selected ? selected.value : '');
     Array.from(question.querySelectorAll('textarea[data-field]')).forEach(function (field) {
       response[field.dataset.field] = field.value.trim();
     });
     state.responses[number] = response;
     scheduleSave();
     updateProgress();
+  }
+
+  // ---- One question at a time: choose an answer, check it, see the correct choice. The set stays unsubmitted.
+
+  function cleanLetter(value) {
+    var letter = String(value || '').trim().toUpperCase();
+    return /^[A-D]$/.test(letter) ? letter : '';
+  }
+
+  function loadQuestionChecks() {
+    if (!config.submissionEndpoint || submittedReviewMode) return;
+    jsonp('getQuestionChecks', {
+      assignmentId: assignmentId,
+      environment: state.environment || 'production',
+      saveId: state.submissionId || ''
+    }, function (data) {
+      if (!data || !data.ok || archiveMode || submittedReviewMode) return;
+      if (submitted && !progressReviewMode) return;
+      var checks = data.checks || {};
+      Object.keys(checks).forEach(function (key) { storeQuestionCheck(Number(key), checks[key]); });
+      renderCheckedQuestions();
+      if (teacherReviewMode) return;
+      questionCheckOpen = Boolean(data.allowed);
+      if (questionCheckOpen) installQuestionCheckControls();
+      if (Object.keys(checkedQuestions).length) {
+        updateProgress();
+        saveState();
+      }
+    });
+  }
+
+  function storeQuestionCheck(number, check) {
+    var selected = cleanLetter(check && check.selected);
+    var correctAnswer = cleanLetter(check && check.correctAnswer);
+    if (!questions[number - 1] || !selected || !correctAnswer) return;
+    checkedQuestions[number] = { selected: selected, correctAnswer: correctAnswer, correct: selected === correctAnswer };
+    if (teacherReviewMode) return;
+    var response = state.responses[number] || {};
+    response.answer = selected;
+    state.responses[number] = response;
+  }
+
+  function renderCheckedQuestions() {
+    Object.keys(checkedQuestions).forEach(function (key) { markCheckedQuestion(Number(key)); });
+  }
+
+  function markCheckedQuestion(number) {
+    var check = checkedQuestions[number];
+    var question = questions[number - 1];
+    if (!check || !question) return;
+    var control = question.querySelector('.question-check');
+    if (control) control.remove();
+    Array.from(question.querySelectorAll('.choice')).forEach(function (choice) {
+      var input = choice.querySelector('input');
+      input.checked = choice.dataset.letter === check.selected;
+      input.disabled = true;
+      choice.classList.toggle('is-selected', input.checked);
+      choice.classList.remove('is-correct', 'is-wrong', 'is-correct-answer');
+    });
+    Array.from(question.querySelectorAll('.answer-label')).forEach(function (label) { label.remove(); });
+    var selectedChoice = question.querySelector('.choice[data-letter="' + check.selected + '"]');
+    var correctChoice = question.querySelector('.choice[data-letter="' + check.correctAnswer + '"]');
+    question.classList.toggle('question-correct', check.correct);
+    question.classList.toggle('question-wrong', !check.correct);
+    if (selectedChoice) selectedChoice.classList.add(check.correct ? 'is-correct' : 'is-wrong');
+    if (correctChoice) {
+      correctChoice.classList.add('is-correct-answer');
+      var label = document.createElement('span');
+      label.className = 'answer-label';
+      label.textContent = check.correct ? 'Correct' : 'Correct answer';
+      correctChoice.appendChild(label);
+    }
+    if (!check.correct && selectedChoice) {
+      var wrong = document.createElement('span');
+      wrong.className = 'answer-label wrong-label';
+      wrong.textContent = 'Your answer';
+      selectedChoice.appendChild(wrong);
+    }
+  }
+
+  function installQuestionCheckControls() {
+    questions.forEach(function (question, index) {
+      var number = index + 1;
+      if (checkedQuestions[number] || question.querySelector('.question-check')) return;
+      var choiceList = question.querySelector('.choices, .options');
+      if (!choiceList || !choiceList.querySelector('.choice')) return;
+      var control = document.createElement('div');
+      control.className = 'question-check';
+      control.innerHTML = '<button class="question-check-button" type="button">Check this answer</button>' +
+        '<span class="question-check-status" role="status" aria-live="polite"></span>';
+      choiceList.insertAdjacentElement('afterend', control);
+      control.querySelector('button').addEventListener('click', function () { requestQuestionCheck(number); });
+    });
+  }
+
+  function removeQuestionCheckControls() {
+    questionCheckOpen = false;
+    Array.from(document.querySelectorAll('.question-check')).forEach(function (control) { control.remove(); });
+  }
+
+  function requestQuestionCheck(number) {
+    if (submitted || archiveMode || teacherReviewMode || !questionCheckOpen || checkedQuestions[number]) return;
+    var question = questions[number - 1];
+    var control = question.querySelector('.question-check');
+    if (!control) return;
+    var button = control.querySelector('button');
+    var status = control.querySelector('.question-check-status');
+    var selected = question.querySelector('input[type="radio"]:checked');
+    if (!selected) {
+      status.textContent = 'Choose an answer first.';
+      return;
+    }
+    captureQuestion(number);
+    button.disabled = true;
+    button.textContent = 'Checking…';
+    status.textContent = '';
+    function tryAgain() {
+      button.disabled = false;
+      button.textContent = 'Check this answer';
+      status.textContent = 'This could not be checked. Please try again.';
+    }
+    jsonp('checkQuestion', {
+      assignmentId: assignmentId,
+      question: number,
+      answer: selected.value,
+      environment: state.environment || 'production',
+      saveId: state.submissionId || ''
+    }, function (data) {
+      if (submitted || archiveMode) return;
+      if (!data || !data.ok || !cleanLetter(data.selected) || !cleanLetter(data.correctAnswer)) {
+        tryAgain();
+        return;
+      }
+      storeQuestionCheck(number, data);
+      markCheckedQuestion(number);
+      updateProgress();
+      saveState();
+    }, tryAgain, 20000);
   }
 
   function restoreState() {
@@ -668,6 +814,7 @@
 
   function lockSubmittedPage() {
     submitted = true;
+    removeQuestionCheckControls();
     document.body.classList.add('portal-submitted');
     questions.forEach(function (question) {
       Array.from(question.querySelectorAll('input, textarea')).forEach(function (field) { field.disabled = true; });
@@ -732,6 +879,8 @@
     button.textContent = 'Try sending again';
     saveState();
     showMessage('Your work was not submitted. Your answers are still here. Please try again, or ask your teacher.');
+    renderCheckedQuestions();
+    loadQuestionChecks();
   }
 
   function pollForProgressReview(attempt) {
@@ -767,6 +916,7 @@
     state.responses = data.responses || {};
     state.studentName = data.studentName || 'Ethan';
     applyResponsesToForm();
+    renderCheckedQuestions();
     updateProgress();
     lockSubmittedPage();
     var resultBox = document.getElementById('portal-result');
